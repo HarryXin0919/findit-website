@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#61C4E3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3A7BD5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="darkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D1B2A" />
+      <stop offset="100%" style="stop-color:#1B2838" />
+    </linearGradient>
+    <linearGradient id="pulseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#61C4E3;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#3A7BD5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#61C4E3;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="hexClip">
+      <polygon points="256,28 452,142 452,370 256,484 60,370 60,142"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Hexagonal background (IronPulse style) -->
+  <polygon points="256,28 452,142 452,370 256,484 60,370 60,142" fill="url(#darkGrad)"/>
+  
+  <!-- Inner hex border -->
+  <polygon points="256,48 436,152 436,360 256,464 76,360 76,152" fill="none" stroke="#61C4E3" stroke-width="1.5" opacity="0.3"/>
+  
+  <!-- Subtle hex grid pattern -->
+  <g opacity="0.06" clip-path="url(#hexClip)">
+    <line x1="60" y1="200" x2="452" y2="200" stroke="#61C4E3" stroke-width="0.5"/>
+    <line x1="60" y1="260" x2="452" y2="260" stroke="#61C4E3" stroke-width="0.5"/>
+    <line x1="60" y1="320" x2="452" y2="320" stroke="#61C4E3" stroke-width="0.5"/>
+    <line x1="156" y1="28" x2="156" y2="484" stroke="#61C4E3" stroke-width="0.5"/>
+    <line x1="256" y1="28" x2="256" y2="484" stroke="#61C4E3" stroke-width="0.5"/>
+    <line x1="356" y1="28" x2="356" y2="484" stroke="#61C4E3" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Main icon area -->
+  <g transform="translate(256, 200)">
+    
+    <!-- Magnifying glass - outer ring -->
+    <circle cx="-10" cy="-10" r="80" fill="none" stroke="url(#blueGrad)" stroke-width="5" opacity="0.85"/>
+    
+    <!-- Pulse/heartbeat line through magnifying glass (IronPulse DNA) -->
+    <g filter="url(#glow)">
+      <polyline points="-70,-10 -40,-10 -30,-40 -15,20 0,-10 15,-10 25,-40 35,20 45,-10 60,-10" 
+                fill="none" stroke="#61C4E3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+    </g>
+    
+    <!-- Center location dot -->
+    <circle cx="-10" cy="-10" r="8" fill="#61C4E3" opacity="0.9"/>
+    <circle cx="-10" cy="-10" r="14" fill="none" stroke="#61C4E3" stroke-width="1.5" opacity="0.4"/>
+    
+    <!-- Magnifying glass handle with pulse accent -->
+    <line x1="47" y1="47" x2="90" y2="90" stroke="url(#pulseGrad)" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="90" cy="90" r="3" fill="#61C4E3" opacity="0.5"/>
+  </g>
+  
+  <!-- Text: 寻件 -->
+  <text x="256" y="365" text-anchor="middle" font-family="'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-size="60" font-weight="700" fill="#FFFFFF" letter-spacing="16">寻件</text>
+  
+  <!-- Divider line -->
+  <line x1="190" y1="382" x2="322" y2="382" stroke="#61C4E3" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Subtitle -->
+  <text x="256" y="408" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="16" font-weight="600" fill="#61C4E3" letter-spacing="8" opacity="0.85">FINDITEM</text>
+  
+  <!-- IronPulse badge -->
+  <text x="256" y="440" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', sans-serif" font-size="11" font-weight="500" fill="rgba(255,255,255,0.35)" letter-spacing="3">IRONPULSE 6941</text>
+</svg>

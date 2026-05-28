@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#61C4E3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3A7BD5;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dark background -->
+  <rect x="16" y="16" width="480" height="480" rx="108" ry="108" fill="#0A0A0A"/>
+  
+  <!-- Geometric box outline (represents storage bin) -->
+  <g transform="translate(256, 220)" filter="url(#glow)">
+    <!-- Isometric box - top face -->
+    <polygon points="0,-80 100,-30 0,20 -100,-30" fill="none" stroke="#61C4E3" stroke-width="3" opacity="0.6"/>
+    <!-- Isometric box - left face -->
+    <polygon points="-100,-30 0,20 0,100 -100,50" fill="none" stroke="#61C4E3" stroke-width="3" opacity="0.4"/>
+    <!-- Isometric box - right face -->
+    <polygon points="100,-30 0,20 0,100 100,50" fill="none" stroke="#61C4E3" stroke-width="3" opacity="0.4"/>
+    
+    <!-- Signal waves emanating from box -->
+    <path d="M -30,-50 Q 0,-90 30,-50" fill="none" stroke="#61C4E3" stroke-width="2.5" opacity="0.7" stroke-linecap="round"/>
+    <path d="M -50,-40 Q 0,-110 50,-40" fill="none" stroke="#61C4E3" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+    <path d="M -70,-30 Q 0,-130 70,-30" fill="none" stroke="#61C4E3" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+    
+    <!-- Location pin at signal origin -->
+    <circle cx="0" cy="-40" r="5" fill="#61C4E3" opacity="0.9"/>
+  </g>
+  
+  <!-- Text: 寻件 -->
+  <text x="256" y="405" text-anchor="middle" font-family="'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-size="72" font-weight="700" fill="#FFFFFF" letter-spacing="12">寻件</text>
+  
+  <!-- Subtitle -->
+  <text x="256" y="441" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500" fill="#61C4E3" letter-spacing="6" opacity="0.8">FINDITEM</text>
+  
+  <!-- IronPulse badge -->
+  <text x="256" y="476" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', sans-serif" font-size="13" font-weight="500" fill="rgba(255,255,255,0.3)" letter-spacing="3">IRONPULSE 6941</text>
+</svg>

@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寻物 FindItem — Smart Parts Locator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-snap-type: y proximity; scroll-padding-top: 52px; }
+        body {
+            font-family: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
+            background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            transition: background 0.4s, color 0.4s;
+        }
+
+        /* Smooth day/night switch: a uniform cross-fade applied only while toggling */
+        .theme-transition,
+        .theme-transition *,
+        .theme-transition *::before,
+        .theme-transition *::after {
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease,
+                        fill 0.5s ease, stroke 0.5s ease, box-shadow 0.5s ease,
+                        opacity 0.5s ease, filter 0.5s ease !important;
+        }
+        :root {
+            --bg-img-opacity: 0.5;
+            --accent: #61C4E3;
+            --accent-ink: #61C4E3;
+            --accent-dim: rgba(97, 196, 227, 0.12);
+            --text: #f5f5f7;
+            --text-dim: #a1a1a6;
+            --text-dimmer: #86868b;
+            --surface: rgba(255, 255, 255, 0.06);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --surface-hover: rgba(255, 255, 255, 0.12);
+            --bg: #000;
+            --nav-bg: rgba(0, 0, 0, 0.72);
+            --nav-border: rgba(255, 255, 255, 0.08);
+            --hero-glow: rgba(97, 196, 227, 0.1);
+            --stat-bg: #000;
+            --feature-bg: #000;
+            --feature-hover-bg: var(--surface);
+            --footer-bg: #000;
+            --footer-text: rgba(255, 255, 255, 0.6);
+            --footer-text-hover: rgba(255, 255, 255, 0.9);
+            --footer-dot: rgba(255, 255, 255, 0.25);
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --input-color: #fff;
+            --demo-item-hover-border: rgba(255, 255, 255, 0.12);
+            --demo-active-bg: rgba(255, 59, 48, 0.06);
+            --timeline-line: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Light theme */
+        [data-theme="light"] {
+            --bg-img-opacity: 1;
+            --accent: #61C4E3;
+            --accent-ink: #0A7099;
+            --accent-dim: rgba(97, 196, 227, 0.08);
+            --text: #1d1d1f;
+            --text-dim: #6e6e73;
+            --text-dimmer: #86868b;
+            --surface: rgba(0, 0, 0, 0.03);
+            --surface-border: rgba(0, 0, 0, 0.06);
+            --surface-hover: rgba(0, 0, 0, 0.05);
+            --bg: #f5f5f7;
+            --nav-bg: rgba(245, 245, 247, 0.72);
+            --nav-border: rgba(0, 0, 0, 0.08);
+            --hero-glow: rgba(97, 196, 227, 0.08);
+            --stat-bg: #fff;
+            --feature-bg: #fff;
+            --feature-hover-bg: var(--surface);
+            --footer-bg: #f5f5f7;
+            --footer-text: rgba(0, 0, 0, 0.4);
+            --footer-text-hover: rgba(0, 0, 0, 0.8);
+            --footer-dot: rgba(0, 0, 0, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --input-color: #1d1d1f;
+            --demo-item-hover-border: rgba(0, 0, 0, 0.12);
+            --demo-active-bg: rgba(255, 59, 48, 0.06);
+            --timeline-line: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: var(--nav-bg);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid var(--nav-border);
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .nav-inner {
+            max-width: 1080px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 52px; padding: 0 24px;
+        }
+        .nav-brand { font-size: 17px; font-weight: 600; color: #FFFFFF; text-decoration: none; letter-spacing: -0.02em; }
+        [data-theme="light"] .nav-brand { color: #1d1d1f; }
+        [data-theme="light"] .nav-brand .cn-name { color: #1d1d1f; }
+        .nav-brand .it { color: var(--accent-ink); }
+        .nav-brand .cn-name { font-size: 17px; font-weight: 600; color: #FFFFFF; margin-left: 8px; letter-spacing: 0.08em; }
+        .nav-right { display: flex; align-items: center; gap: 24px; }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a { font-size: 13px; color: var(--text-dim); text-decoration: none; transition: color 0.3s; border: 1px solid rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 980px; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--accent) !important; color: #fff !important; padding: 7px 18px; border-radius: 980px; font-weight: 500; }
+        .nav-icon-btn {
+            background: none; border: 1px solid var(--surface-border); color: var(--text-dim);
+            width: 32px; height: 32px; border-radius: 980px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; padding: 0;
+        }
+        .nav-icon-btn:hover { border-color: var(--surface-hover); color: var(--text); }
+        .nav-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        @media (max-width: 768px) { .nav-links { display: none; } }
+
+        .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+        /* Section backgrounds */
+        .section-bg {
+            position: relative; overflow: hidden;
+        }
+        .section-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            filter: saturate(0.6) brightness(0.82);
+            opacity: var(--bg-img-opacity, 1);
+            transition: background-position 0.15s ease-out;
+            animation: kenBurns 50s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+        @keyframes kenBurns {
+            0% { transform: scale(1.04) translate(0, 0); }
+            50% { transform: scale(1.07) translate(-0.5%, -0.5%); }
+            100% { transform: scale(1.04) translate(0.5%, 0.5%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .section-bg::before { animation: none; }
+        }
+        .section-bg::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, var(--bg) 2%, rgba(0,0,0,0.2) 32%, rgba(0,0,0,0.2) 68%, var(--bg) 98%);
+            pointer-events: none;
+        }
+        .hero-bg::before { background-image: url('img/cropped/hero.jpg'); }
+        .stats-bg::before { background-image: url('img/cropped/stats.jpg'); }
+        .how-bg::before { background-image: url('img/cropped/how.jpg'); }
+        .features-bg::before { background-image: url('img/cropped/features.jpg'); }
+        .roadmap-bg::before { background-image: url('img/cropped/roadmap.jpg'); }
+        .demo-bg::before { background-image: url('img/cropped/demo.jpg'); }
+
+        .section-bg > * { position: relative; z-index: 1; }
+
+        [data-theme="light"] .section-bg::before { filter: saturate(0.6) brightness(0.55); }
+        [data-theme="light"] .section-bg::after {
+            background: linear-gradient(180deg, var(--bg) 3%, rgba(245,245,247,0.45) 20%, rgba(245,245,247,0.45) 80%, var(--bg) 97%);
+        }
+
+        /* Section spacing */
+        .section-spacer {
+            height: 120px;
+        }
+        @media (max-width: 768px) {
+            .section-spacer { display: none; }
+            .hero-bg::before { background-size: 200%; background-position: 50% 35%; }
+            .hero { min-height: 100vh; min-height: 100dvh; height: auto; padding: 70px 20px 40px; scroll-snap-align: start; box-sizing: border-box; }
+            .stats { height: auto; min-height: auto; padding: 40px 20px; }
+            .stat { padding: 24px 16px; background: rgba(0,0,0,0.65); }
+            .stat-num { font-size: 32px; }
+            .stat-unit { font-size: 18px; }
+            .how { min-height: 100vh; min-height: 100dvh; height: auto; padding: 56px 16px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; box-sizing: border-box; }
+            .step { padding: 20px 16px; background: rgba(0,0,0,0.6); }
+            .step-num { font-size: 36px; margin-bottom: 8px; }
+            .step h3 { font-size: 17px; margin-bottom: 4px; }
+            .step p { font-size: 13px; }
+            .features { min-height: 100vh; min-height: 100dvh; height: auto; padding: 56px 16px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; box-sizing: border-box; }
+            .feature { padding: 16px; background: rgba(0,0,0,0.6); }
+            .feature h3 { font-size: 15px; margin-bottom: 2px; }
+            .feature p { font-size: 12px; line-height: 1.4; }
+            .demo { min-height: 100vh; min-height: 100dvh; height: auto; padding: 56px 16px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; box-sizing: border-box; }
+            .demo-box { padding: 24px 16px; background: rgba(0,0,0,0.6); }
+            .roadmap { min-height: 100vh; min-height: 100dvh; height: auto; padding: 56px 16px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; box-sizing: border-box; }
+            .tl-item { padding: 8px 12px; margin-bottom: 8px; background: rgba(10,10,10,0.65); }
+            .tl-title { font-size: 14px; margin-bottom: 2px; }
+            .tl-desc { font-size: 11px; line-height: 1.4; }
+            .tl-phase { font-size: 10px; margin-bottom: 2px; }
+            .timeline { padding-left: 28px; }
+            .tl-item::before { left: -23px; width: 8px; height: 8px; }
+            .timeline::before { left: 8px; }
+            .how .container, .features .container, .demo .container, .roadmap .container {
+                background: rgba(0,0,0,0.5); border-radius: 16px; padding: 20px 14px;
+            }
+            .stats .container { background: none; padding: 0; }
+            .section-eyebrow { margin-bottom: 4px; font-size: 13px; }
+            .section-title { font-size: 24px; margin-bottom: 16px; }
+            .section-title, .section-eyebrow { text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
+            .stat-label { color: rgba(255,255,255,0.75); font-size: 12px; }
+            .step p, .feature p, .tl-desc { color: rgba(255,255,255,0.8); }
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 120px 24px 80px; position: relative;
+        }
+        .hero-glow {
+            position: absolute; width: 800px; height: 800px; border-radius: 50%;
+            background: radial-gradient(circle, var(--hero-glow) 0%, transparent 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -60%); pointer-events: none;
+            z-index: 1;
+        }
+        .hero-label {
+            font-size: 13px; font-weight: 600; color: #fff;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 20px; position: relative; z-index: 2;
+            opacity: 0.12; transform: translateY(20px); animation: fadeUp 0.8s ease forwards 0.2s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.45), 0 1px 10px rgba(0,0,0,0.4);
+        }
+        .hero h1 {
+            font-size: clamp(48px, 9vw, 92px); font-weight: 700; letter-spacing: -0.035em;
+            line-height: 1.05; margin-bottom: 24px; position: relative; z-index: 1;
+            opacity: 0.12; transform: translateY(30px); animation: fadeUp 1s ease forwards 0.4s;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 2px 24px rgba(0,0,0,0.35);
+        }
+        .hero h1 .it { color: var(--accent); }
+        .hero h1 .dim { color: #fff; }
+        .hero-sub {
+            font-size: clamp(17px, 2.5vw, 22px); color: #fff; max-width: 480px;
+            line-height: 1.5; margin-bottom: 48px; position: relative; z-index: 1;
+            opacity: 0.12; transform: translateY(20px); animation: fadeUp 0.8s ease forwards 0.7s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.42), 0 1px 14px rgba(0,0,0,0.32);
+        }
+        .hero-actions {
+            display: flex; gap: 16px; position: relative; z-index: 1;
+            opacity: 0.12; transform: translateY(20px); animation: fadeUp 0.8s ease forwards 0.9s;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 16px 32px; border-radius: 980px; font-size: 17px;
+            font-weight: 500; text-decoration: none; transition: all 0.3s; border: none; cursor: pointer;
+        }
+        .btn-fill { background: var(--accent); color: #fff; }
+        .btn-fill:hover { background: #4db8d9; transform: scale(1.02); box-shadow: 0 4px 24px rgba(97,196,227,0.3); }
+        .btn-ghost { background: transparent; color: var(--accent); }
+        .btn-ghost:hover { background: var(--accent-dim); }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes panelIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Reveal */
+        .reveal {
+            transform: translateY(60px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s, background 0.4s;
+        }
+        .reveal:not(.visible) { opacity: 0.12; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Stats */
+        .stats { padding: 150px 24px; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1px; background: var(--surface-border); border-radius: 16px; overflow: hidden;
+        }
+        .stat { background: rgba(0,0,0,0.35); padding: 48px 32px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(255,255,255,0.06); }
+        .stat:hover { transform: scale(1.03); }
+        .stat-num { font-size: clamp(36px, 5vw, 54px); font-weight: 600; letter-spacing: -0.03em; color: var(--accent-ink); line-height: 1; }
+        .stat-unit { font-size: clamp(20px, 3vw, 32px); }
+        .stat-label { font-size: 14px; color: var(--text-dim); margin-top: 8px; letter-spacing: 0.02em; }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* How */
+        .how { padding: 150px 24px; }
+        .section-eyebrow { font-size: 16px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; -webkit-text-stroke: 0.5px rgba(0,0,0,0.3); paint-order: stroke fill; }
+        .section-bg .section-title { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.45), 0 2px 16px rgba(0,0,0,0.4); }
+        .section-bg .section-eyebrow { text-shadow: 0 1px 2px rgba(0,0,0,0.45), 0 1px 10px rgba(0,0,0,0.4); }
+        .section-title { font-size: clamp(32px, 5vw, 54px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 64px; max-width: 600px; color: #FFFFFF; }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .step {
+            padding: 40px 32px; background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .step:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(97,196,227,0.12); }
+        .step-num { font-size: 60px; font-weight: 600; color: var(--accent-ink); opacity: 0.55; line-height: 1; margin-bottom: 24px; letter-spacing: -0.02em; }
+        .step h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: #fff; }
+        .step p { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
+        .step-more { margin-top: 16px; font-size: 14px; font-weight: 500; color: var(--accent-ink); opacity: 0.9; transition: opacity 0.3s, transform 0.3s; }
+        .step:hover .step-more { opacity: 1; transform: translateX(3px); }
+        .demo-back-btn { display: inline-flex; align-items: center; background: none; border: none; color: var(--text-dim); font-size: 14px; font-weight: 500; cursor: pointer; padding: 4px 0; margin-bottom: 14px; transition: color 0.2s; }
+        .demo-back-btn:hover { color: var(--text); }
+        @media (max-width: 768px) { .steps { grid-template-columns: 1fr; gap: 16px; } }
+
+        /* Features */
+        .features { padding: 150px 24px; }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--surface-border); border-radius: 20px; overflow: hidden;
+        }
+        .feature { background: rgba(0,0,0,0.35); padding: 40px 32px; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(255,255,255,0.06); }
+        .feature:hover { transform: translateY(-2px); box-shadow: 0 4px 24px rgba(97,196,227,0.1); }
+        .feature.wide { grid-column: span 2; }
+        .feature-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: var(--accent-dim); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+        .feature-icon svg { width: 22px; height: 22px; stroke: var(--accent-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .feature h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; color: #fff; }
+        .feature p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+        @media (max-width: 768px) { .feature-grid { grid-template-columns: 1fr; } .feature.wide { grid-column: span 1; } }
+
+        /* Demo */
+        .demo { padding: 150px 24px; }
+
+        /* Flow Steps */
+        .flow-steps {
+            display: flex; justify-content: center; gap: 0; margin-bottom: 48px;
+        }
+        .flow-step {
+            display: flex; align-items: center; gap: 0;
+        }
+        .flow-step-dot {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--surface); border: 2px solid var(--surface-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; color: var(--text-dimmer);
+            transition: all 0.4s;
+        }
+        .flow-step.active .flow-step-dot {
+            background: var(--accent); border-color: var(--accent); color: #fff;
+            box-shadow: 0 0 20px rgba(97,196,227,0.3);
+        }
+        .flow-step.done .flow-step-dot {
+            background: #30d158; border-color: #30d158; color: #fff;
+        }
+        .flow-step-label {
+            font-size: 12px; color: var(--text-dimmer); margin-top: 6px; text-align: center;
+            transition: color 0.3s;
+        }
+        .flow-step.active .flow-step-label { color: var(--accent); }
+        .flow-step.done .flow-step-label { color: #30d158; }
+        .flow-step-line {
+            width: 48px; height: 2px; background: var(--surface-border);
+            margin: 0 4px; transition: background 0.4s;
+            align-self: center;
+        }
+        .flow-step.done + .flow-step .flow-step-line,
+        .flow-step.done ~ .flow-step-line { background: #30d158; }
+        .flow-step-inner { display: flex; flex-direction: column; align-items: center; }
+
+        /* Entry Cards */
+        .entry-cards {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+            max-width: 520px; margin: 0 auto 40px;
+        }
+        .entry-card {
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 28px 20px; text-align: center;
+            transition: all 0.3s; cursor: pointer;
+        }
+        .entry-card:hover { border-color: rgba(97,196,227,0.2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(97,196,227,0.08); }
+        .entry-card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: var(--accent-dim); margin: 0 auto 14px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .entry-card-icon svg { width: 24px; height: 24px; stroke: var(--accent-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .entry-card h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .entry-card p { font-size: 12px; color: var(--text-dimmer); line-height: 1.5; }
+
+        /* Demo panels */
+        .demo-panels { max-width: 720px; margin: 0 auto; min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
+        .demo-panel { display: none; width: 100%; }
+        .demo-panel.active { display: block; animation: panelIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @media (max-width: 768px) { .demo-panels { min-height: 0; display: block; } }
+
+        .demo-box {
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 48px 40px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .demo-box:hover { border-color: rgba(97,196,227,0.15); box-shadow: 0 8px 32px rgba(97,196,227,0.1); }
+        .demo-box h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; color: #fff; }
+        .demo-box > p { font-size: 15px; color: var(--text-dim); margin-bottom: 32px; }
+        .demo-input-wrap { position: relative; margin-bottom: 20px; }
+        .demo-input-wrap svg {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            width: 18px; height: 18px; stroke: var(--text-dimmer); fill: none; stroke-width: 2; stroke-linecap: round;
+        }
+        .demo-input {
+            width: 100%; padding: 16px 18px 16px 46px; border-radius: 12px;
+            border: 1px solid var(--surface-border); background: var(--input-bg);
+            color: var(--input-color); font-size: 16px; outline: none; transition: border-color 0.3s, background 0.4s, color 0.4s;
+        }
+        .demo-input:focus { border-color: var(--accent); }
+        .demo-input::placeholder { color: var(--text-dimmer); }
+        .demo-results { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
+        .demo-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; background: var(--surface);
+            border: 1px solid var(--surface-border); border-radius: 12px; cursor: pointer; transition: all 0.2s;
+        }
+        .demo-item:hover { border-color: var(--demo-item-hover-border); }
+        .demo-item.active { border-color: #ff3b30; background: var(--demo-active-bg); }
+        .demo-item-name { font-size: 15px; font-weight: 500; }
+        .demo-item-meta { font-size: 12px; color: var(--text-dimmer); margin-top: 2px; }
+        .demo-btn {
+            padding: 6px 16px; border-radius: 980px; border: none;
+            background: var(--accent); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .demo-btn:hover { background: #4db8d9; }
+        .demo-btn.active { background: #ff3b30; }
+
+        /* Locate animation */
+        .locate-panel { text-align: center; }
+        .locate-box-visual {
+            width: 200px; height: 160px; margin: 32px auto;
+            background: var(--surface); border: 2px solid var(--surface-border); border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; transition: all 0.3s;
+        }
+        .locate-box-visual.locating {
+            animation: boxFlash 0.6s ease-in-out infinite;
+        }
+        .locate-box-visual.locating .locate-led {
+            animation: ledPulse 0.3s ease-in-out infinite;
+        }
+        .locate-box-visual .locate-led {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--text-dimmer); transition: all 0.3s;
+        }
+        .locate-box-visual.locating .locate-led { background: #ff3b30; box-shadow: 0 0 16px #ff3b30; }
+        .locate-box-visual .locate-box-id {
+            font-size: 13px; font-weight: 600; color: var(--text-dim); margin-top: 12px;
+        }
+        .locate-box-visual .locate-buzzer {
+            font-size: 11px; color: var(--text-dimmer); margin-top: 4px;
+        }
+        @keyframes boxFlash {
+            0%, 100% { border-color: var(--surface-border); box-shadow: none; }
+            50% { border-color: #ff3b30; box-shadow: 0 0 30px rgba(255,59,48,0.3); }
+        }
+        @keyframes ledPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+        }
+        .locate-info { font-size: 15px; color: var(--text-dim); margin-bottom: 8px; }
+        .locate-part-name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .locate-sound-waves {
+            display: flex; justify-content: center; gap: 4px; margin-top: 12px; opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .locate-box-visual.locating ~ .locate-sound-waves,
+        .locate-sound-waves.active { opacity: 1; }
+        .sound-bar {
+            width: 4px; background: var(--accent); border-radius: 2px;
+            animation: soundWave 0.4s ease-in-out infinite alternate;
+        }
+        .sound-bar:nth-child(1) { height: 12px; animation-delay: 0s; }
+        .sound-bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+        .sound-bar:nth-child(3) { height: 28px; animation-delay: 0.15s; }
+        .sound-bar:nth-child(4) { height: 20px; animation-delay: 0.2s; }
+        .sound-bar:nth-child(5) { height: 12px; animation-delay: 0.3s; }
+        @keyframes soundWave {
+            from { transform: scaleY(0.4); } to { transform: scaleY(1); }
+        }
+
+        /* Confirm panel */
+        .confirm-success {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(48,209,88,0.15); border: 2px solid #30d158;
+            display: flex; align-items: center; justify-content: center;
+            margin: 32px auto;
+            animation: successPop 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .confirm-success svg { width: 36px; height: 36px; stroke: #30d158; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        @keyframes successPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .confirm-stats {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0;
+        }
+        .confirm-stat {
+            background: var(--surface); border-radius: 12px; padding: 16px; text-align: center;
+        }
+        .confirm-stat-value { font-size: 24px; font-weight: 700; color: var(--accent-ink); }
+        .confirm-stat-label { font-size: 12px; color: var(--text-dimmer); margin-top: 4px; }
+
+        /* Action buttons */
+        .demo-action-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 980px; border: none;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+        }
+        .demo-action-btn.primary { background: var(--accent); color: #fff; }
+        .demo-action-btn.primary:hover { background: #4db8d9; transform: scale(1.02); box-shadow: 0 4px 24px rgba(97,196,227,0.3); }
+        .demo-action-btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--surface-border); }
+        .demo-action-btn.secondary:hover { border-color: var(--surface-hover); }
+        .demo-action-btn.success { background: #30d158; color: #fff; }
+        .demo-action-btn.success:hover { background: #28b84d; }
+        .demo-actions { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+
+        @media (max-width: 768px) {
+            .entry-cards { grid-template-columns: 1fr; }
+            .confirm-stats { grid-template-columns: 1fr; }
+            .flow-steps { gap: 0; }
+            .flow-step-line { width: 24px; }
+            .flow-step-dot { width: 30px; height: 30px; font-size: 12px; }
+        }
+
+        [data-theme="light"] .entry-card { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .demo-box { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .locate-box-visual { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .confirm-stat { background: rgba(0,0,0,0.03); }
+        [data-theme="light"] .flow-step-dot { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .flow-step-label { color: var(--text-dim); }
+        [data-theme="light"] .flow-step.active .flow-step-label { color: var(--accent); }
+        [data-theme="light"] .flow-step.done .flow-step-label { color: #30d158; }
+
+        /* Roadmap */
+        .roadmap { padding: 150px 24px; }
+        .timeline { position: relative; padding-left: 48px; max-width: 640px; }
+        .timeline::before { content: ''; position: absolute; left: 15px; top: 8px; bottom: 8px; width: 1px; background: var(--timeline-line); }
+        .tl-item { position: relative; margin-bottom: 48px; padding: 16px 20px; border-radius: 12px; transition: transform 0.3s; background: rgba(10,10,10,0.45); border: 1px solid rgba(255,255,255,0.08); }
+        .tl-item:hover { transform: translateX(4px); }
+        .tl-item::before { content: ''; position: absolute; left: -40px; top: 6px; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); }
+        .tl-item.dim::before { background: var(--text-dimmer); }
+        .tl-phase { font-size: 12px; font-weight: 600; color: var(--accent-ink); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+        .tl-item.dim .tl-phase { color: var(--text-dimmer); }
+        .tl-title { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 6px; color: #fff; }
+        .tl-desc { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
+
+        /* Footer */
+        footer {
+            text-align: center; padding: 48px 24px; background: var(--footer-bg);
+            color: var(--footer-text); font-size: 14px; border-top: 0.5px solid var(--surface-border);
+            transition: background 0.4s, color 0.4s;
+        }
+        .footer-inner { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .footer-inner span { color: var(--footer-text); }
+        .footer-inner a { color: var(--footer-text); text-decoration: none; transition: color 0.3s; }
+        .footer-inner a:hover { color: var(--footer-text-hover); }
+        /* Light mode: white text sits on bright photos, so restore a crisp readability shadow */
+        [data-theme="light"] .section-bg .section-title { text-shadow: 0 1px 2px rgba(0,0,0,0.45), 0 2px 16px rgba(0,0,0,0.5); }
+        [data-theme="light"] .section-bg .section-eyebrow { text-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 1px 10px rgba(0,0,0,0.5); }
+        [data-theme="light"] .hero-label,
+        [data-theme="light"] .hero-sub { text-shadow: 0 1px 2px rgba(0,0,0,0.55), 0 2px 14px rgba(0,0,0,0.45); }
+        [data-theme="light"] .step h3,
+        [data-theme="light"] .demo-box h3,
+        [data-theme="light"] .tl-title { text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
+        [data-theme="light"] .stat { background: rgba(255,255,255,0.45); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .stat:hover { background: rgba(255,255,255,0.8); }
+        [data-theme="light"] .step { background: rgba(255,255,255,0.45); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .step:hover { background: rgba(255,255,255,0.8); }
+        [data-theme="light"] .feature { background: rgba(255,255,255,0.45); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .feature:hover { background: rgba(255,255,255,0.8); }
+        [data-theme="light"] .feature h3 { color: var(--text); }
+        [data-theme="light"] .feature p { color: var(--text-dim); }
+        [data-theme="light"] .demo-box { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .tl-item { background: rgba(255,255,255,0.72); border-color: rgba(0,0,0,0.08); }
+
+        @media (max-width: 480px) {
+            .hero-actions { flex-direction: column; width: 100%; }
+            .btn { justify-content: center; width: 100%; }
+        }
+
+        /* Lang switch transition */
+        .lang-fade {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        body:not(.lang-fade) {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+    </style>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);})()</script>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">Find<span class="it">Item</span> <span class="cn-name">寻<span class="it">物</span></span></a>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#how" data-i18n="nav_how">原理</a></li>
+                    <li><a href="#features" data-i18n="nav_features">功能</a></li>
+                    <li><a href="#demo" data-i18n="nav_demo">演示</a></li>
+                    <li><a href="#roadmap" data-i18n="nav_roadmap">路线图</a></li>
+                    <li><a href="#demo" class="nav-cta" data-i18n="nav_cta">开始使用</a></li>
+                </ul>
+                <button class="nav-icon-btn" onclick="toggleLang()" id="lang-btn" title="Switch Language">EN</button>
+                <button class="nav-icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle Theme">
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero section-bg hero-bg">
+        <div class="hero-glow"></div>
+        <div class="hero-label" data-i18n="hero_label">IronPulse 6941 · 智能零件定位系统</div>
+        <h1 data-i18n="hero_h1" data-i18n-html><span class="it">30 秒</span><br>找到你要的<span class="it">零件</span></h1>
+        <p class="hero-sub" data-i18n="hero_sub">扫码搜索，箱子响铃，秒级定位</p>
+        <div class="hero-actions">
+            <a href="#demo" class="btn btn-fill" data-i18n="hero_cta1">试试看 →</a>
+            <a href="#how" class="btn btn-ghost" data-i18n="hero_cta2">了解原理</a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats section-bg stats-bg">
+        <div class="container">
+            <div class="stats-grid reveal">
+                <div class="stat">
+                    <div class="stat-num">40<span class="stat-unit" data-i18n="stat_unit_box">箱</span></div>
+                    <div class="stat-label" data-i18n="stat_boxes">零件箱覆盖</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">7<span class="stat-unit" data-i18n="stat_unit_people">人</span></div>
+                    <div class="stat-label" data-i18n="stat_concurrent">同时查找</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">&lt;30<span class="stat-unit">s</span></div>
+                    <div class="stat-label" data-i18n="stat_time">定位时间</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">¥25</div>
+                    <div class="stat-label" data-i18n="stat_cost">单箱成本</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how section-bg how-bg" id="how">
+        <div class="container">
+            <div class="section-eyebrow reveal" data-i18n="how_eyebrow">原理</div>
+            <div class="section-title reveal reveal-delay-1" data-i18n="how_title">三步找到零件</div>
+            <div class="steps">
+                <div class="step reveal reveal-delay-1" onclick="openStep(1)" style="cursor:pointer">
+                    <div class="step-num">01</div>
+                    <h3 data-i18n="step1_title">搜索</h3>
+                    <p data-i18n="step1_desc">手机扫码打开网页，输入零件名称或型号</p>
+                    <div class="step-more" data-i18n="step_more">查看详情 →</div>
+                </div>
+                <div class="step reveal reveal-delay-2" onclick="openStep(2)" style="cursor:pointer">
+                    <div class="step-num">02</div>
+                    <h3 data-i18n="step2_title">定位</h3>
+                    <p data-i18n="step2_desc">对应零件箱自动响铃闪灯，颜色和节奏区分不同用户</p>
+                    <div class="step-more" data-i18n="step_more">查看详情 →</div>
+                </div>
+                <div class="step reveal reveal-delay-3" onclick="openStep(3)" style="cursor:pointer">
+                    <div class="step-num">03</div>
+                    <h3 data-i18n="step3_title">取件</h3>
+                    <p data-i18n="step3_desc">拿到零件，点击确认，停止响铃，整个过程不到 30 秒</p>
+                    <div class="step-more" data-i18n="step_more">查看详情 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features section-bg features-bg" id="features">
+        <div class="container">
+            <div class="section-eyebrow reveal" data-i18n="feat_eyebrow">功能</div>
+            <div class="section-title reveal reveal-delay-1" data-i18n="feat_title">为机器人社打造</div>
+            <div class="feature-grid reveal reveal-delay-2">
+                <div class="feature" onclick="openFeature(1)" style="cursor:pointer">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+                    <h3 data-i18n="feat1_title">模糊搜索</h3>
+                    <p data-i18n="feat1_desc">输入名称、型号或类别，实时匹配，不用翻箱倒柜</p>
+                </div>
+                <div class="feature" onclick="openFeature(2)" style="cursor:pointer">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <h3 data-i18n="feat2_title">多人并发</h3>
+                    <p data-i18n="feat2_desc">最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏</p>
+                </div>
+                <div class="feature" onclick="openFeature(3)" style="cursor:pointer">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                    <h3 data-i18n="feat3_title">飞书登录</h3>
+                    <p data-i18n="feat3_desc">OAuth 身份验证，仅限 IronPulse 6941 队员使用</p>
+                </div>
+                <div class="feature" onclick="openFeature(4)" style="cursor:pointer">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
+                    <h3 data-i18n="feat4_title">电量监控</h3>
+                    <p data-i18n="feat4_desc">电池电压实时监测，低电量自动飞书通知管理员</p>
+                </div>
+                <div class="feature wide" onclick="openFeature(5)" style="cursor:pointer">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+                    <h3 data-i18n="feat5_title">零件管理</h3>
+                    <p data-i18n="feat5_desc">管理员可增删改查零件信息，按名称、型号、类别搜索，每个箱子最多 3 种零件，清晰明了</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo section-bg demo-bg" id="demo">
+        <div class="container">
+            <div class="section-eyebrow reveal" data-i18n="demo_eyebrow">操控演示</div>
+            <div class="section-title reveal reveal-delay-1" data-i18n="demo_title">完整操控流程</div>
+
+            <!-- Flow Steps -->
+            <div class="flow-steps reveal reveal-delay-1" id="flow-steps">
+                <div class="flow-step active" data-step="1">
+                    <div class="flow-step-inner">
+                        <div class="flow-step-dot">1</div>
+                        <div class="flow-step-label" data-i18n="flow_step1">进入</div>
+                    </div>
+                </div>
+                <div class="flow-step-line"></div>
+                <div class="flow-step" data-step="2">
+                    <div class="flow-step-inner">
+                        <div class="flow-step-dot">2</div>
+                        <div class="flow-step-label" data-i18n="flow_step2">搜索</div>
+                    </div>
+                </div>
+                <div class="flow-step-line"></div>
+                <div class="flow-step" data-step="3">
+                    <div class="flow-step-inner">
+                        <div class="flow-step-dot">3</div>
+                        <div class="flow-step-label" data-i18n="flow_step3">定位</div>
+                    </div>
+                </div>
+                <div class="flow-step-line"></div>
+                <div class="flow-step" data-step="4">
+                    <div class="flow-step-inner">
+                        <div class="flow-step-dot">4</div>
+                        <div class="flow-step-label" data-i18n="flow_step4">确认</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-panels reveal reveal-delay-2">
+
+                <!-- Step 1: Entry -->
+                <div class="demo-panel active" id="panel-entry">
+                    <div class="entry-cards">
+                        <div class="entry-card" onclick="goToStep(2)">
+                            <div class="entry-card-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            </div>
+                            <h4 data-i18n="entry_qr_title">扫码进入</h4>
+                            <p data-i18n="entry_qr_desc">每个零件箱上贴有二维码，手机扫码直接打开操控页</p>
+                        </div>
+                        <div class="entry-card" onclick="goToStep(2)">
+                            <div class="entry-card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                            </div>
+                            <h4 data-i18n="entry_chat_title">飞书机器人</h4>
+                            <p data-i18n="entry_chat_desc">在飞书群中 @寻物机器人 发送零件名称即可定位</p>
+                        </div>
+                    </div>
+                    <div style="text-align:center;color:var(--text-dimmer);font-size:13px" data-i18n="entry_hint">👆 点击任意方式继续演示</div>
+                </div>
+
+                <!-- Step 2: Search -->
+                <div class="demo-panel" id="panel-search">
+                    <div class="demo-box">
+                        <button class="demo-back-btn" onclick="goToStep(1)" data-i18n="demo_back_entry">← 返回</button>
+                        <h3 data-i18n="demo_search_title">搜索零件</h3>
+                        <p data-i18n="demo_search_desc">输入零件名称、型号或类别，实时匹配</p>
+                        <div class="demo-input-wrap">
+                            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" class="demo-input" id="demo-input" data-i18n-placeholder="demo_placeholder" placeholder="M3 螺丝、轴承、齿轮..." oninput="demoSearch()">
+                        </div>
+                        <div class="demo-results" id="demo-results"></div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Locate -->
+                <div class="demo-panel" id="panel-locate">
+                    <div class="demo-box locate-panel">
+                        <div class="locate-info" data-i18n="locate_info">正在定位零件...</div>
+                        <div class="locate-part-name" id="locate-part-name"></div>
+                        <div class="locate-box-visual" id="locate-box-visual">
+                            <div class="locate-led"></div>
+                            <div class="locate-box-id" id="locate-box-id"></div>
+                            <div class="locate-buzzer" data-i18n="locate_buzzer">🔊 蜂鸣器响铃中</div>
+                        </div>
+                        <div class="locate-sound-waves" id="sound-waves">
+                            <div class="sound-bar"></div>
+                            <div class="sound-bar"></div>
+                            <div class="sound-bar"></div>
+                            <div class="sound-bar"></div>
+                            <div class="sound-bar"></div>
+                        </div>
+                        <div class="demo-actions">
+                            <button class="demo-action-btn success" onclick="confirmPickup()" data-i18n="locate_confirm_btn">✓ 已取到零件</button>
+                            <button class="demo-action-btn secondary" onclick="goToStep(2)" data-i18n="locate_back_btn">← 重新搜索</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirm -->
+                <div class="demo-panel" id="panel-confirm">
+                    <div class="demo-box" style="text-align:center">
+                        <div class="confirm-success">
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <h3 style="margin-top:8px" data-i18n="confirm_title">定位完成</h3>
+                        <p data-i18n="confirm_desc">零件已找到，响铃已停止</p>
+                        <div class="confirm-stats">
+                            <div class="confirm-stat">
+                                <div class="confirm-stat-value" id="confirm-time">3s</div>
+                                <div class="confirm-stat-label" data-i18n="confirm_time_label">定位用时</div>
+                            </div>
+                            <div class="confirm-stat">
+                                <div class="confirm-stat-value" id="confirm-box"></div>
+                                <div class="confirm-stat-label" data-i18n="confirm_box_label">目标箱号</div>
+                            </div>
+                            <div class="confirm-stat">
+                                <div class="confirm-stat-value" data-i18n="confirm_status_done">完成</div>
+                                <div class="confirm-stat-label" data-i18n="confirm_status_label">状态</div>
+                            </div>
+                        </div>
+                        <div class="demo-actions">
+                            <button class="demo-action-btn primary" onclick="resetDemo()" data-i18n="confirm_again_btn">再找一个 →</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="roadmap section-bg roadmap-bg" id="roadmap">
+        <div class="container">
+            <div class="section-eyebrow reveal" data-i18n="road_eyebrow">路线图</div>
+            <div class="section-title reveal reveal-delay-1" data-i18n="road_title">一步一步来</div>
+            <div class="timeline reveal reveal-delay-2">
+                <div class="tl-item">
+                    <div class="tl-phase">Phase 1 · <span data-i18n="road1_when">第 1-2 周</span></div>
+                    <div class="tl-title" data-i18n="road1_title">MVP 原型</div>
+                    <div class="tl-desc" data-i18n="road1_desc">1 箱、面包板、基础搜索+响铃</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-phase">Phase 2 · <span data-i18n="road2_when">第 3-4 周</span></div>
+                    <div class="tl-title" data-i18n="road2_title">登录+多人</div>
+                    <div class="tl-desc" data-i18n="road2_desc">飞书登录、数据库、并发查找</div>
+                </div>
+                <div class="tl-item dim">
+                    <div class="tl-phase">Phase 3 · <span data-i18n="road3_when">第 5-6 周</span></div>
+                    <div class="tl-title" data-i18n="road3_title">量产</div>
+                    <div class="tl-desc" data-i18n="road3_desc">PCB、3D 外壳、固件优化</div>
+                </div>
+                <div class="tl-item dim">
+                    <div class="tl-phase">Phase 4 · <span data-i18n="road4_when">第 7-8 周</span></div>
+                    <div class="tl-title" data-i18n="road4_title">部署</div>
+                    <div class="tl-desc" data-i18n="road4_desc">40 套安装、录入零件、上线</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <span data-i18n="footer_docs">项目文档</span>
+            <span class="footer-dot">·</span>
+            <a href="#">GitHub</a>
+            <span class="footer-dot">·</span>
+            <a href="https://www.ironpulse.net" target="_blank">IronPulse 6941</a>
+        </div>
+    </footer>
+
+    <script>
+        // ========== Theme ==========
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            // No manual choice yet → pick by the visitor's LOCAL time (reflects their timezone): day = light, night = dark
+            const hour = new Date().getHours();
+            return (hour >= 7 && hour < 19) ? 'light' : 'dark';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const moon = document.getElementById('theme-icon-moon');
+            const sun = document.getElementById('theme-icon-sun');
+            if (theme === 'light') {
+                moon.style.display = 'none';
+                sun.style.display = 'block';
+            } else {
+                moon.style.display = 'block';
+                sun.style.display = 'none';
+            }
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const current = root.getAttribute('data-theme') || 'dark';
+            root.classList.add('theme-transition');
+            void root.offsetWidth; // flush styles so the cross-fade is active before the theme flips
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+            clearTimeout(window.__themeTransitionTO);
+            window.__themeTransitionTO = setTimeout(() => root.classList.remove('theme-transition'), 650);
+        }
+
+        // Init theme immediately (before render)
+        applyTheme(getPreferredTheme());
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'light' : 'dark');
+        });
+
+        // ========== i18n ==========
+        const zh = {
+            nav_how: '原理', nav_features: '功能', nav_demo: '演示', nav_roadmap: '路线图', nav_cta: '开始使用',
+            hero_label: 'IronPulse 6941 · 智能零件定位系统',
+            hero_h1: '<span class="it">30 秒</span><br>找到你要的<span class="it">零件</span>',
+            hero_sub: '扫码搜索，箱子响铃，秒级定位',
+            hero_cta1: '试试看 →', hero_cta2: '了解原理',
+            stat_unit_box: '箱', stat_unit_people: '人',
+            stat_boxes: '零件箱覆盖', stat_concurrent: '同时查找', stat_time: '定位时间', stat_cost: '单箱成本',
+            how_eyebrow: '原理', how_title: '三步找到零件',
+            step1_title: '搜索', step1_desc: '手机扫码打开网页，输入零件名称或型号',
+            step2_title: '定位', step2_desc: '对应零件箱自动响铃闪灯，颜色和节奏区分不同用户',
+            step3_title: '取件', step3_desc: '拿到零件，点击确认，停止响铃，整个过程不到 30 秒',
+            step_more: '查看详情 →',
+            feat_eyebrow: '功能', feat_title: '为机器人社打造',
+            feat1_title: '模糊搜索', feat1_desc: '输入名称、型号或类别，实时匹配，不用翻箱倒柜',
+            feat2_title: '多人并发', feat2_desc: '最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏',
+            feat3_title: '飞书登录', feat3_desc: 'OAuth 身份验证，仅限 IronPulse 6941 队员使用',
+            feat4_title: '电量监控', feat4_desc: '电池电压实时监测，低电量自动飞书通知管理员',
+            feat5_title: '零件管理', feat5_desc: '管理员可增删改查零件信息，按名称、型号、类别搜索，每个箱子最多 3 种零件，清晰明了',
+            demo_eyebrow: '操控演示', demo_title: '完整操控流程',
+            flow_step1: '进入', flow_step2: '搜索', flow_step3: '定位', flow_step4: '确认',
+            demo_back_entry: '← 返回',
+            entry_qr_title: '扫码进入', entry_qr_desc: '每个零件箱上贴有二维码，手机扫码直接打开操控页',
+            entry_chat_title: '飞书机器人', entry_chat_desc: '在飞书群中 @寻物机器人 发送零件名称即可定位',
+            entry_hint: '👆 点击任意方式继续演示',
+            demo_search_title: '搜索零件', demo_search_desc: '输入零件名称、型号或类别，实时匹配',
+            demo_placeholder: 'M3 螺丝、轴承、齿轮...',
+            demo_locate: '定位', demo_found: '已找到', demo_no_match: '无匹配结果',
+            locate_info: '正在定位零件...', locate_buzzer: '🔊 蜂鸣器响铃中',
+            locate_confirm_btn: '✓ 已取到零件', locate_back_btn: '← 重新搜索',
+            confirm_title: '定位完成', confirm_desc: '零件已找到，响铃已停止',
+            confirm_time_label: '定位用时', confirm_box_label: '目标箱号',
+            confirm_status_done: '完成', confirm_status_label: '状态',
+            confirm_again_btn: '再找一个 →',
+            road_eyebrow: '路线图', road_title: '一步一步来',
+            road1_when: '第 1-2 周', road1_title: 'MVP 原型', road1_desc: '1 箱、面包板、基础搜索+响铃',
+            road2_when: '第 3-4 周', road2_title: '登录+多人', road2_desc: '飞书登录、数据库、并发查找',
+            road3_when: '第 5-6 周', road3_title: '量产', road3_desc: 'PCB、3D 外壳、固件优化',
+            road4_when: '第 7-8 周', road4_title: '部署', road4_desc: '40 套安装、录入零件、上线',
+            footer_docs: '项目文档',
+        };
+
+        const en = {
+            nav_how: 'How', nav_features: 'Features', nav_demo: 'Demo', nav_roadmap: 'Roadmap', nav_cta: 'Get Started',
+            hero_label: 'IronPulse 6941 · Smart Parts Locator',
+            hero_h1: 'Find <span class="it">any part</span><br>in <span class="it">30 seconds</span>',
+            hero_sub: 'Search, beep, flash — located instantly',
+            hero_cta1: 'Try It →', hero_cta2: 'How It Works',
+            stat_unit_box: ' bins', stat_unit_people: ' users',
+            stat_boxes: 'Parts Bins', stat_concurrent: 'Concurrent Users', stat_time: 'Locate Time', stat_cost: 'Per Unit Cost',
+            how_eyebrow: 'How It Works', how_title: 'Three steps to any part',
+            step1_title: 'Search', step1_desc: 'Scan QR code on your phone, type the part name or model number',
+            step2_title: 'Locate', step2_desc: 'The target box beeps and flashes LEDs — colors and rhythms distinguish users',
+            step3_title: 'Pick Up', step3_desc: 'Grab the part, tap confirm, done — under 30 seconds total',
+            step_more: 'Learn more →',
+            feat_eyebrow: 'Features', feat_title: 'Built for the robotics team',
+            feat1_title: 'Smart Search', feat1_desc: 'Search by name, model, or category with instant fuzzy matching',
+            feat2_title: 'Multi-user', feat2_desc: 'Up to 7 people searching simultaneously, each with unique LED color and beep pattern',
+            feat3_title: 'Feishu Login', feat3_desc: 'OAuth authentication — only IronPulse 6941 team members can access',
+            feat4_title: 'Battery Monitor', feat4_desc: 'Real-time voltage monitoring with automatic low-battery alerts via Feishu',
+            feat5_title: 'Parts Management', feat5_desc: 'Admins can add, edit, and search parts by name, model, or category — max 3 part types per box',
+            demo_eyebrow: 'Live Demo', demo_title: 'Complete Control Flow',
+            flow_step1: 'Enter', flow_step2: 'Search', flow_step3: 'Locate', flow_step4: 'Confirm',
+            demo_back_entry: '← Back',
+            entry_qr_title: 'Scan QR', entry_qr_desc: 'Each parts bin has a QR code — scan to open the control page',
+            entry_chat_title: 'Feishu Bot', entry_chat_desc: '@FindItem bot in Feishu group chat, send part name to locate',
+            entry_hint: '👆 Click any method to continue',
+            demo_search_title: 'Search Parts', demo_search_desc: 'Type part name, model, or category for instant matching',
+            demo_placeholder: 'M3 screw, bearing, gear...',
+            demo_locate: 'Locate', demo_found: 'Found', demo_no_match: 'No matches',
+            locate_info: 'Locating part...', locate_buzzer: '🔊 Buzzer active',
+            locate_confirm_btn: '✓ Part Retrieved', locate_back_btn: '← Search Again',
+            confirm_title: 'Located', confirm_desc: 'Part found, buzzer stopped',
+            confirm_time_label: 'Time', confirm_box_label: 'Target Box',
+            confirm_status_done: 'Done', confirm_status_label: 'Status',
+            confirm_again_btn: 'Find Another →',
+            road_eyebrow: 'Roadmap', road_title: 'Step by step',
+            road1_when: 'Week 1-2', road1_title: 'MVP', road1_desc: '1 box, breadboard, basic search + beep',
+            road2_when: 'Week 3-4', road2_title: 'Auth + Multi-user', road2_desc: 'Feishu login, database, concurrent search',
+            road3_when: 'Week 5-6', road3_title: 'Production', road3_desc: 'PCB design, 3D case, firmware, batch flash',
+            road4_when: 'Week 7-8', road4_title: 'Deploy', road4_desc: 'Install 40 units, catalog parts, go live',
+            footer_docs: 'Docs',
+        };
+
+        let lang = 'zh';
+
+        function applyLang() {
+            const dict = lang === 'zh' ? zh : en;
+            document.title = lang === 'zh' ? '寻物 FindItem — 智能零件定位系统' : 'FindItem — Smart Parts Locator';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key in dict) {
+                    if (el.hasAttribute('data-i18n-html')) {
+                        el.innerHTML = dict[key];
+                    } else {
+                        el.textContent = dict[key];
+                    }
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) el.placeholder = dict[key];
+            });
+            document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
+            document.getElementById('lang-btn').textContent = lang === 'zh' ? 'EN' : '中';
+            // Re-render demo if there's a search
+            demoSearch();
+        }
+
+        function toggleLang() {
+            lang = lang === 'zh' ? 'en' : 'zh';
+            document.body.classList.add('lang-fade');
+            setTimeout(() => {
+                applyLang();
+                requestAnimationFrame(() => {
+                    document.body.classList.remove('lang-fade');
+                });
+            }, 200);
+        }
+
+        // ========== Scroll Reveal ==========
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                } else {
+                    e.target.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ========== API Abstraction Layer ==========
+        // 切换模式："demo" = 本地演示，"live" = 连接后端
+        const API_MODE = "demo";
+        const API_BASE = ""; // 后端地址，如 "https://api.finditem.ironpulse.net"
+        let currentUser = null; // 登录后从 session 获取用户信息
+
+        const Api = {
+            async search(query) {
+                if (API_MODE === "demo") return null; // demo 模式用本地 PARTS
+                return fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`)
+                    .then(r => r.json());
+            },
+            async locate(boxId, userId) {
+                if (API_MODE === "demo") return { ok: true };
+                return fetch(`${API_BASE}/api/find/${boxId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: userId })
+                }).then(r => r.json());
+            },
+            async stop(boxId, userId) {
+                if (API_MODE === "demo") return { ok: true };
+                return fetch(`${API_BASE}/api/stop/${boxId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: userId })
+                }).then(r => r.json());
+            },
+            async feishuAuth() {
+                if (API_MODE === "demo") return;
+                window.location.href = `${API_BASE}/api/auth/feishu`;
+            },
+            // 检查登录状态
+            async checkAuth() {
+                if (API_MODE === "demo") return { logged_in: false };
+                return fetch(`${API_BASE}/api/auth/me`).then(r => r.json());
+            }
+        };
+
+        // ========== Demo Flow ==========
+        let currentStep = 1;
+        let locatedPart = null;
+        let locateStartTime = null;
+
+        function goToStep(step) {
+            currentStep = step;
+            // Update flow steps
+            document.querySelectorAll('.flow-step').forEach((el, i) => {
+                const s = i + 1; // step number (accounting for lines)
+                // flow-step elements are at indices 0, 2, 4, 6 (every other is flow-step-line)
+            });
+            const steps = document.querySelectorAll('.flow-step');
+            const lines = document.querySelectorAll('.flow-step-line');
+            steps.forEach((el, i) => {
+                const s = i + 1;
+                el.classList.remove('active', 'done');
+                if (s < step) el.classList.add('done');
+                else if (s === step) el.classList.add('active');
+            });
+            lines.forEach((el, i) => {
+                el.style.background = (i + 1 < step) ? '#30d158' : '';
+            });
+            // Show panel
+            document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+            const panelId = ['panel-entry', 'panel-search', 'panel-locate', 'panel-confirm'][step - 1];
+            document.getElementById(panelId).classList.add('active');
+            // Focus search input
+            if (step === 2) {
+                setTimeout(() => document.getElementById('demo-input').focus(), 300);
+            }
+            // Start locate animation
+            if (step === 3 && locatedPart) {
+                startLocateAnimation();
+            }
+        }
+
+        // Top flow-step indicators are clickable: jump back to an earlier step (or to Search)
+        document.querySelectorAll('#flow-steps .flow-step').forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+                const s = parseInt(el.getAttribute('data-step'), 10);
+                if (s && (s <= currentStep || s === 2)) goToStep(s);
+            });
+        });
+
+        function startLocateAnimation() {
+            const box = document.getElementById('locate-box-visual');
+            const waves = document.getElementById('sound-waves');
+            locateStartTime = Date.now();
+            box.classList.add('locating');
+            waves.classList.add('active');
+        }
+
+        function confirmPickup() {
+            const box = document.getElementById('locate-box-visual');
+            const waves = document.getElementById('sound-waves');
+            box.classList.remove('locating');
+            waves.classList.remove('active');
+            // 停止响铃（live 模式会调后端）
+            if (locatedPart) Api.stop(locatedPart.box, currentUser?.id || 'demo_user').catch(() => {});
+            const elapsed = ((Date.now() - locateStartTime) / 1000).toFixed(1);
+            document.getElementById('confirm-time').textContent = elapsed + 's';
+            document.getElementById('confirm-box').textContent = locatedPart ? locatedPart.box : '';
+            goToStep(4);
+        }
+
+        function resetDemo() {
+            locatedPart = null;
+            activePart = null;
+            document.getElementById('demo-input').value = '';
+            document.getElementById('demo-results').innerHTML = '';
+            goToStep(1);
+        }
+
+        // ========== Demo Search ==========
+        const PARTS = [
+            { name: "小零件：螺母、螺丝、垫片、套管", box: "FINDIT-001", cat: "螺母" },
+            { name: "M5防松螺母/手拧螺母/四方螺母", box: "FINDIT-001", cat: "螺母" },
+            { name: "杯头M4*8/10/12/16", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M5*30/35/40", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*25/30/35", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M6*10/12/16", box: "FINDIT-002", cat: "螺丝" },
+            { name: "自攻螺丝M5*25/M5*40/M2.6*5", box: "FINDIT-002", cat: "螺丝" },
+            { name: "垫片 M4*10*1/M5*12*1/M5*16*1.5", box: "FINDIT-004", cat: "垫片" },
+            { name: "套管φ5.2*11*5/8/10/12", box: "FINDIT-005", cat: "套管" },
+            { name: "M6手拧、防松、四方螺母/ M4普通螺母/ M4防松螺母", box: "FINDIT-001", cat: "螺母" },
+            { name: "杯头M4*20/25/30/更长", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M5*45/及以上（自封袋）", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*40/45/50", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M6*20/25/30", box: "FINDIT-002", cat: "螺丝" },
+            { name: "英制螺丝 杯头8#32*0.5/0.75/1/更长", box: "FINDIT-002", cat: "螺丝" },
+            { name: "垫片 M5*22*1.5/M6*12*1.5/M6*16*2/M6*25*2", box: "FINDIT-004", cat: "垫片" },
+            { name: "套管φ5.2*11*15/18/20/25", box: "FINDIT-005", cat: "套管" },
+            { name: "铆钉M5*13", box: "FINDIT-006", cat: "铆钉" },
+            { name: "半圆头M5*8/10/12", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*8/10/12", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*55/60/65", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M6*35/40/45", box: "FINDIT-002", cat: "螺丝" },
+            { name: "英制螺丝 杯头半圆头10#32*0.375/0.5/0.75/1", box: "FINDIT-002", cat: "螺丝" },
+            { name: "垫片 M10*20*2/M14*21*1/ M14*24*2/M30*38*1", box: "FINDIT-004", cat: "垫片" },
+            { name: "套管φ6.2*11*5/8/10/15", box: "FINDIT-005", cat: "套管" },
+            { name: "铆钉M5*16/25", box: "FINDIT-006", cat: "铆钉" },
+            { name: "半圆头M5*16/20/25", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*14/16/20", box: "FINDIT-002", cat: "螺丝" },
+            { name: "杯头M5*70及更长", box: "FINDIT-002", cat: "螺丝" },
+            { name: "半圆头M6*50/及更长", box: "FINDIT-002", cat: "螺丝" },
+            { name: "英制螺丝 杯头10#32*1.25/1.5/1.75/2及更长", box: "FINDIT-002", cat: "螺丝" },
+            { name: "垫片+套管 M8*14*1/M8*14*2/M8*22*2/M8*14*5", box: "FINDIT-004", cat: "垫片" },
+            { name: "平键 2*2*8/12 3*3*8/12/16 卷销/销 4*10/12/16/20/25 5*10/12/16/20 卡簧 6/8//10/12", box: "FINDIT-007", cat: "其他" },
+            { name: "公制轴承D12/D15+其他 X四点角接触轴承  KB035XP0 KA035XP0 D12-F6901（12*24*6）/F6001（12*28*8） D15-F6702（15*21*4）/F6802（15*24*5） D15-F6902（15*28*7）", box: "FINDIT-007", cat: "其他" },
+            { name: "行星减速箱 基本组件： Ring Gear/齿轮组/螺丝/基础套装 CIM adapter falcon输出", box: "FINDIT-007", cat: "其他" },
+            { name: "金属带轮 质量好的塑料带轮", box: "FINDIT-007", cat: "其他" },
+            { name: "铝型材附件", box: "FINDIT-007", cat: "其他" },
+            { name: "公制铜套（内*外*长） 5*9*6/5*9*10 6*10*8/6*12*10 8*12*10 公制法兰铜套 SHYZ（肩型） 内*外*长/法兰D*法兰厚度 5*9*10/14*2、6*10*12/16*2、 8*12*12/20*2、10*14*12/22*2 MPFZU（薄壁肩型） 内*外*长/法兰D*法兰厚度 12*15*12/21*3 推力轴轴承 F5-10M（5*10*4）/F5-12M（5*12*4） F6-12M（6*12*4.5）/F6-14M（6*14*5） F8-14M（8*14*4）/F8-19M（8*19*7）", box: "FINDIT-007", cat: "其他" },
+            { name: "英制VEX PRO轴承 深沟球轴承 法兰轴承： ThunderHex-1/2‘’（217-4006） ThunderHex-3/8‘’（217-5829） HEX-1/2‘’（217-3875） HEX-3/8‘’（217-2735）", box: "FINDIT-003", cat: "螺丝" },
+            { name: "行星减速箱成品及第三方行星减速箱", box: "FINDIT-007", cat: "其他" },
+            { name: "起步齿轮：775（6）/Falcon（8/10/12/14）                   /CIM（12） 起步带轮：775（3M-12T）                   /Falcon（5M）", box: "FINDIT-007", cat: "其他" },
+            { name: "VEX PRO 法兰铜套 9.525塑料217-7435   9.25*15.88 9.525铜    217-7346 12.7塑料  217-7347   13.75*19.05 12.7铜     217-7348", box: "FINDIT-007", cat: "其他" },
+            { name: "VEX传动件-Adapter 轴夹环12.7 轴夹环9.525 1/2''六角联轴器 8mm to 1/2'' adapter Falcon to 1/2'' adapter", box: "FINDIT-007", cat: "其他" },
+            { name: "绳索系统： 外螺纹鱼眼M6 绳箍、正反牙张紧器 收线器 尼龙绳 宽扁绳", box: "FINDIT-007", cat: "其他" },
+            { name: "齿轮（每两格一串，共四串） 20DP1/2'hex齿轮： 钢18/20/22/24 铝26/28/30/32/36/40 20DP3/8'hex齿轮： 公制齿轮：", box: "FINDIT-007", cat: "其他" },
+            { name: "公制法兰轴承D5/D6/D8/D10 D5-F685（5*11*5）/F605（5*14*5） D5-F625（5*16*5）/F635（5*19*6） D6-F686（6*13*5） D6-F696（6*15*5）/F606（6*17*6） D6-F626（6*19*6）/F636（6*22*7） D8-FMR148（8*14*4）/ F688（8*16*5） D8-F698（8*19*6）/F 608（8*22*7） D8-F628 (8*24*8) D10-F6800（10*19*5）/F6900（6*22*6） D10-F6000（10*26*8）/F6200（10*30*9）", box: "FINDIT-007", cat: "其他" },
+            { name: "VEX传动件-法兰 塑料法兰1/2” Hex Plastic VersaHub 4009 传扭法兰1.125\" Bearing Pilot Plastic VersaHub 3234 铝法兰1/2” Hex Aluminum VersaHub 2592", box: "FINDIT-007", cat: "其他" },
+            { name: "公制轴承", box: "FINDIT-007", cat: "其他" },
+            { name: "齿轮 20DP1/2'hex齿轮，铝带万用孔及普通 42-56横穿一串： 56-70斜横穿一串 72-84平躺一竖", box: "FINDIT-007", cat: "其他" },
+            { name: "套管 M8*14*8/M8*14*12/M8*14*15/M8*14*20", box: "FINDIT-005", cat: "套管" },
+            { name: "M3防松螺母、普通螺母/ M4普通螺母/ M4防松螺母", box: "FINDIT-001", cat: "螺母" },
+            { name: "铆钉M4*13 沉头铆钉M5*13 钢铆钉M5*13", box: "FINDIT-006", cat: "铆钉" },
+            { name: "杯头M3*20/25/30/更长", box: "FINDIT-003", cat: "螺丝" },
+            { name: "杯头M5*70/80/90", box: "FINDIT-003", cat: "螺丝" },
+            { name: "垫片 M5*22*1.5/M6*12*1.5/M6*16*1.5/M6*25*1.5", box: "FINDIT-004", cat: "垫片" },
+            { name: "M5防松螺母 M5手拧螺母 M5四方螺母", box: "FINDIT-001", cat: "螺母" },
+            { name: "杯头M5*100/及以上", box: "FINDIT-003", cat: "螺丝" },
+            { name: "M6手拧、防松、四方螺母/ M8防松螺母、尼龙螺母/ M10防松螺母、尼龙螺母/", box: "FINDIT-001", cat: "螺母" },
+            { name: "M8螺丝/M10螺丝（自封袋）", box: "FINDIT-007", cat: "其他" },
+            { name: "杯头M3*8/10/12/16", box: "FINDIT-003", cat: "螺丝" },
+            { name: "半圆头m4*16/m5*25", box: "FINDIT-003", cat: "螺丝" },
+            { name: "113、506电控件", box: "FINDIT-008", cat: "电控" },
+            { name: "各种快速接头", box: "FINDIT-009", cat: "接头" },
+            { name: "120A开关", box: "FINDIT-010", cat: "传感器" },
+            { name: "小接线板（白色）", box: "FINDIT-011", cat: "线材" },
+            { name: "506+113电控", box: "FINDIT-008", cat: "电控" },
+            { name: "120欧姆电阻", box: "FINDIT-012", cat: "保险丝/电阻" },
+            { name: "针型端子", box: "FINDIT-013", cat: "端子" },
+            { name: "热缩管小", box: "FINDIT-014", cat: "热缩管" },
+            { name: "Wago快速接头 小型 1to1 小型 180度转向 大型 180度转向", box: "FINDIT-009", cat: "接头" },
+            { name: "光电门/微动开关", box: "FINDIT-010", cat: "传感器" },
+            { name: "VRM Braker/断路器", box: "FINDIT-015", cat: "控制器" },
+            { name: "保险丝 120Ω电阻", box: "FINDIT-012", cat: "保险丝/电阻" },
+            { name: "冷压管端子", box: "FINDIT-013", cat: "端子" },
+            { name: "热缩管大", box: "FINDIT-014", cat: "热缩管" },
+            { name: "杜邦线", box: "FINDIT-011", cat: "线材" },
+            { name: "国产分电器", box: "FINDIT-016", cat: "电源" },
+            { name: "编码器", box: "FINDIT-010", cat: "传感器" },
+            { name: "摄像头", box: "FINDIT-010", cat: "传感器" },
+            { name: "热缩防水端子 小铜鼻子", box: "FINDIT-013", cat: "端子" },
+            { name: "国产快速接头 小型2 to 2 大型2 to 2 巨型2 to 2", box: "FINDIT-009", cat: "接头" },
+            { name: "各种信号线转换头", box: "FINDIT-011", cat: "线材" },
+            { name: "电池相关 SB50/大铜鼻子", box: "FINDIT-013", cat: "端子" },
+            { name: "RoboRio", box: "FINDIT-015", cat: "控制器" },
+            { name: "国产分电板接线盒（绿）", box: "FINDIT-011", cat: "线材" },
+            { name: "电焊及附件", box: "FINDIT-008", cat: "电控" },
+            { name: "国产快速接头 2 to多 多to多 多to多", box: "FINDIT-009", cat: "接头" },
+            { name: "LED灯带", box: "FINDIT-017", cat: "LED/灯" },
+            { name: "RSL/PCM 陀螺仪", box: "FINDIT-015", cat: "控制器" },
+            { name: "路由器及附件", box: "FINDIT-018", cat: "网络设备" },
+            { name: "信号灯RSL", box: "FINDIT-017", cat: "LED/灯" },
+            { name: "VRM PCM", box: "FINDIT-015", cat: "控制器" },
+            { name: "radio power module/ mini power module", box: "FINDIT-008", cat: "电控" },
+            { name: "电源转接头", box: "FINDIT-009", cat: "接头" },
+            { name: "保险丝（大、小）", box: "FINDIT-012", cat: "保险丝/电阻" },
+            { name: "管端子/裸铜管/", box: "FINDIT-013", cat: "端子" },
+            { name: "冷压管端子（黄色） BV5.5 10/12awg", box: "FINDIT-013", cat: "端子" },
+            { name: "冷压 铜管 BN0.5 22awg", box: "FINDIT-008", cat: "电控" },
+            { name: "小号铜鼻端子/多PIN对接端子", box: "FINDIT-013", cat: "端子" },
+            { name: "针形端子", box: "FINDIT-013", cat: "端子" },
+            { name: "针型端子（蓝） 7508 18awg", box: "FINDIT-013", cat: "端子" },
+            { name: "针型端子（红） 0308 22awg", box: "FINDIT-013", cat: "端子" },
+            { name: "针型端子（黄） 6012 10awg", box: "FINDIT-013", cat: "端子" },
+            { name: "针型端子（黑） 4012 12awg", box: "FINDIT-013", cat: "端子" },
+            { name: "交换机", box: "FINDIT-018", cat: "网络设备" },
+            { name: "灯条/灯带", box: "FINDIT-017", cat: "LED/灯" },
+            { name: "热缩管", box: "FINDIT-014", cat: "热缩管" },
+            { name: "白路由器/国产路由", box: "FINDIT-018", cat: "网络设备" },
+            { name: "黑路由器及电源", box: "FINDIT-018", cat: "网络设备" },
+            { name: "国产稳压器", box: "FINDIT-016", cat: "电源" },
+            { name: "光电门、微动开关", box: "FINDIT-010", cat: "传感器" },
+            { name: "视觉/limelight", box: "FINDIT-010", cat: "传感器" },
+            { name: "电池相关", box: "FINDIT-019", cat: "电池相关" },
+            { name: "电池专用铜鼻子SC25-6", box: "FINDIT-013", cat: "端子" },
+            { name: "安德森端子 普通 8/10 awg 测试线", box: "FINDIT-013", cat: "端子" },
+            { name: "安德森端子 优质 4/6 awg 电池线 SB50", box: "FINDIT-013", cat: "端子" },
+            { name: "杜邦线/PWM线", box: "FINDIT-011", cat: "线材" },
+            { name: "陀螺仪", box: "FINDIT-010", cat: "传感器" },
+            { name: "网线接头/POE", box: "FINDIT-009", cat: "接头" },
+            { name: "组合高度340，长640 共计4*5=20个（2+3）*4组合", box: "FINDIT-020", cat: "传动件" },
+            { name: "每抽最多7隔板 共计8格", box: "FINDIT-020", cat: "传动件" },
+            { name: "公制轴承 内径4、5、6", box: "FINDIT-021", cat: "轴承" },
+            { name: "1/2’铜套 3/8‘铜套", box: "FINDIT-022", cat: "铜套" },
+            { name: "Kraken起步齿轮", box: "FINDIT-023", cat: "齿轮" },
+            { name: "星型减速箱 减速部分", box: "FINDIT-024", cat: "减速箱" },
+            { name: "公制轴承 内径8及以上", box: "FINDIT-021", cat: "轴承" },
+            { name: "公制铜套", box: "FINDIT-022", cat: "铜套" },
+            { name: "Kraken起步带轮", box: "FINDIT-023", cat: "齿轮" },
+            { name: "星型减速箱 BaseKit 星型减速箱 Adapter", box: "FINDIT-024", cat: "减速箱" },
+            { name: "1/2'Hex轴承 1/2'ThunderHex轴承", box: "FINDIT-021", cat: "轴承" },
+            { name: "轴箍 法兰/Hub", box: "FINDIT-025", cat: "连接件" },
+            { name: "Falcon起步齿轮 Falcon起步带轮", box: "FINDIT-023", cat: "齿轮" },
+            { name: "3/8'Hex轴承 3/8'圆轴承", box: "FINDIT-021", cat: "轴承" },
+            { name: "各类Adapter 联轴器", box: "FINDIT-025", cat: "连接件" },
+            { name: "CIM/775等旧电机起步齿轮", box: "FINDIT-023", cat: "齿轮" },
+        ];
+
+        let activePart = null;
+
+        function demoSearch() {
+            const q = document.getElementById('demo-input').value.trim().toLowerCase();
+            const div = document.getElementById('demo-results');
+            const dict = lang === 'zh' ? zh : en;
+            if (!q) { div.innerHTML = ''; return; }
+            const isEn = lang === 'en';
+            const m = PARTS.filter(p => {
+                const name = isEn ? (p.name_en || p.name) : p.name;
+                const cat = isEn ? (p.cat_en || p.cat) : p.cat;
+                return name.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || cat.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
+            });
+            if (!m.length) {
+                div.innerHTML = '<div style="text-align:center;color:var(--text-dimmer);padding:12px;font-size:14px">' + dict.demo_no_match + '</div>';
+                return;
+            }
+            div.innerHTML = m.map(p => {
+                const displayName = isEn ? (p.name_en || p.name) : p.name;
+                const displayCat = isEn ? (p.cat_en || p.cat) : p.cat;
+                return `
+                <div class="demo-item${activePart===p.name?' active':''}" onclick="demoLocate('${p.name}')">
+                    <div>
+                        <div class="demo-item-name">${displayName}</div>
+                        <div class="demo-item-meta">${displayCat} · ${p.box}</div>
+                    </div>
+                    <button class="demo-btn${activePart===p.name?' active':''}">${activePart===p.name?dict.demo_found:dict.demo_locate}</button>
+                </div>`;
+            }).join('');
+        }
+
+        function demoLocate(name) {
+            activePart = activePart === name ? null : name;
+            if (activePart) {
+                locatedPart = PARTS.find(p => p.name === name);
+                // Set locate panel info
+                document.getElementById('locate-part-name').textContent = locatedPart.name;
+                document.getElementById('locate-box-id').textContent = locatedPart.box;
+                // 触发定位（live 模式会调后端，demo 模式只做动画）
+                Api.locate(locatedPart.box, currentUser?.id || 'demo_user').catch(() => {});
+                goToStep(3);
+            } else {
+                demoSearch();
+            }
+        }
+
+        // ========== Smooth Nav Scroll ==========
+        // Frame the section's actual content (its inner .container) below the fixed nav,
+        // instead of landing on the section's large top/bottom padding.
+        document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const id = a.getAttribute('href').slice(1);
+                const target = document.getElementById(id);
+                if (!target) return;
+                e.preventDefault();
+                const navH = document.querySelector('nav').offsetHeight;
+                const viewportH = window.innerHeight;
+                const avail = viewportH - navH;
+                const gap = 28;
+                const content = target.querySelector('.container') || target;
+                const rect = content.getBoundingClientRect();
+                const contentTop = window.pageYOffset + rect.top;
+                let scrollTarget;
+                if (rect.height >= avail - gap * 2) {
+                    // Content taller than the available space: pin its top just below the nav
+                    scrollTarget = contentTop - navH - gap;
+                } else {
+                    // Content fits: center it in the visible area below the nav
+                    scrollTarget = contentTop - navH - (avail - rect.height) / 2;
+                }
+                window.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+            });
+        });
+
+        // ========== End ==========
+    </script>
+    <!-- Feature Modal -->
+    <div id="feature-modal" onclick="if(event.target===this)closeFeature()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);justify-content:center;align-items:center;padding:24px">
+        <div id="modal-content" style="background:var(--bg);border:1px solid var(--surface-border);border-radius:24px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;padding:48px 40px;position:relative;transform:translateY(20px);opacity:0;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1),opacity 0.4s">
+            <button onclick="closeFeature()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:24px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='none'">✕</button>
+            <div id="modal-icon" style="width:56px;height:56px;border-radius:14px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin-bottom:24px"></div>
+            <h2 id="modal-title" style="font-size:28px;font-weight:700;letter-spacing:-0.03em;margin-bottom:12px"></h2>
+            <p id="modal-subtitle" style="font-size:16px;color:var(--text-dim);line-height:1.6;margin-bottom:32px"></p>
+            <div id="modal-body" style="font-size:15px;line-height:1.8;color:var(--text-dim)"></div>
+        </div>
+    </div>
+
+    <script src="features.js"></script>
+</body>
+</html>

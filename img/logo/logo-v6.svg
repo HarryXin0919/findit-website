@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D1B2A" />
+      <stop offset="100%" style="stop-color:#1B2838" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#61C4E3" />
+      <stop offset="100%" style="stop-color:#3A7BD5" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Gear shape generator as path -->
+    <clipPath id="hexClip">
+      <polygon points="256,20 458,136 458,376 256,492 54,376 54,136"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Hex background -->
+  <polygon points="256,20 458,136 458,376 256,492 54,376 54,136" fill="url(#bgGrad)"/>
+  <polygon points="256,20 458,136 458,376 256,492 54,376 54,136" fill="none" stroke="#61C4E3" stroke-width="2" opacity="0.3"/>
+  <polygon points="256,42 440,150 440,362 256,470 72,362 72,150" fill="none" stroke="#61C4E3" stroke-width="0.8" opacity="0.12"/>
+  
+  <!-- Main icon group -->
+  <g transform="translate(256, 190)">
+    
+    <!-- Black gear (left/lower half) - like IronPulse logo -->
+    <g opacity="0.9">
+      <!-- Gear teeth -->
+      <path d="
+        M -4,-100 L 8,-100 L 8,-88 L 20,-92 L 28,-80 L 18,-72 L 28,-62 L 18,-52 L 26,-40 L 16,-34 L 22,-20 L 12,-16 L 16,-2 L 6,0 L 8,14 L -2,12 L -2,26 L -12,22 L -16,34 L -26,28 L -32,40 L -40,32 L -48,42 L -54,32 L -64,40 L -68,28 L -78,34 L -80,22 L -92,26 L -92,14 L -104,16 L -102,4 L -114,4 L -110,-8 L -122,-10 L -116,-20 L -126,-26 L -118,-34 L -126,-42 L -116,-48 L -122,-56 L -110,-58 L -114,-68 L -102,-66 L -104,-76 L -92,-72 L -90,-82 L -78,-76 L -74,-86 L -62,-78 L -56,-86 L -46,-76 L -38,-84 L -30,-72 L -20,-78 L -14,-66 L -4,-72 L 0,-60 L -4,-50 L 6,-52 L 4,-40 L 14,-38 L 10,-26 L 20,-22 L 14,-10 L 24,-4 L 16,6 L 26,12 L 16,20 L 24,28 L 14,34 L 20,44 L 8,46 L 12,56 L 0,56 L 2,66 L -10,64 L -8,74 L -20,70 L -16,80 L -28,74 L -22,84 L -34,76 L -28,86 L -40,78 L -36,88 L -48,80 L -46,90 L -56,84 L -56,94 L -66,88 L -68,98 L -76,92 L -80,102 L -86,96 L -92,106 L -96,100 L -104,108 L -104,4
+      " fill="#1a1a1a" stroke="none"/>
+      
+      <!-- Simplified: Use a cleaner gear approach -->
+    </g>
+    
+    <!-- CLEAN APPROACH: Two interlocking gears like IronPulse style -->
+    
+    <!-- Black gear (large, background) -->
+    <g transform="rotate(-15)">
+      <circle cx="0" cy="0" r="68" fill="#1a1a1a"/>
+      <!-- Gear teeth - 10 teeth -->
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(36)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(72)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(108)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(144)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(180)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(216)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(252)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(288)"/>
+      <rect x="-8" y="-88" width="16" height="20" rx="2" fill="#1a1a1a" transform="rotate(324)"/>
+      <!-- Center hole -->
+      <circle cx="0" cy="0" r="28" fill="#0D1B2A"/>
+      <circle cx="0" cy="0" r="28" fill="none" stroke="#2a2a2a" stroke-width="1"/>
+    </g>
+    
+    <!-- Blue gear (smaller, partial, offset - like IronPulse style) -->
+    <g transform="translate(40, -40) rotate(10)">
+      <circle cx="0" cy="0" r="45" fill="#61C4E3"/>
+      <!-- Gear teeth - 8 teeth -->
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(45)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(90)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(135)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(180)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(225)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(270)"/>
+      <rect x="-7" y="-59" width="14" height="16" rx="2" fill="#61C4E3" transform="rotate(315)"/>
+      <!-- Center hole -->
+      <circle cx="0" cy="0" r="16" fill="#0D1B2A"/>
+    </g>
+    
+    <!-- Diagonal slash line (IronPulse signature) -->
+    <line x1="-80" y1="70" x2="70" y2="-80" stroke="#FFFFFF" stroke-width="3.5" opacity="0.85" filter="url(#glow)"/>
+    
+    <!-- Magnifying glass overlay on gears -->
+    <g filter="url(#glow)" opacity="0.9">
+      <circle cx="0" cy="0" r="82" fill="none" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+    </g>
+    
+    <!-- Pulse heartbeat wave inside (IronPulse DNA) -->
+    <g filter="url(#glow)" opacity="0.65">
+      <path d="M -55,0 L -30,0 L -20,-30 L -8,25 L 5,0 L 15,0 L 22,-30 L 32,25 L 40,0 L 55,0" 
+            fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="3.5" fill="#61C4E3" opacity="0.9"/>
+  </g>
+  
+  <!-- Text: 寻件 -->
+  <text x="256" y="370" text-anchor="middle" font-family="'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-size="58" font-weight="700" fill="#FFFFFF" letter-spacing="14">寻件</text>
+  
+  <!-- Accent underline -->
+  <line x1="185" y1="386" x2="327" y2="386" stroke="url(#accentGrad)" stroke-width="1.2" opacity="0.5"/>
+  
+  <!-- FINDITEM -->
+  <text x="256" y="412" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="15" font-weight="600" fill="#61C4E3" letter-spacing="7" opacity="0.85">FINDITEM</text>
+  
+  <!-- IronPulse 6941 -->
+  <text x="256" y="444" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', sans-serif" font-size="11" font-weight="500" fill="rgba(255,255,255,0.3)" letter-spacing="3">IRONPULSE 6941</text>
+</svg>

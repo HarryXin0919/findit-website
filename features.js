@@ -1,0 +1,478 @@
+// Feature detail data
+const featureDetails = {
+    zh: {
+        1: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+            title: '模糊搜索',
+            subtitle: '输入名称、型号或类别，实时匹配，不用翻箱倒柜',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">工作原理</h3>
+                <p style="margin-bottom:24px">系统采用模糊匹配算法，支持按零件名称、型号、类别进行搜索。不需要记住精确的零件编号，输入部分关键词即可实时匹配。</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">🔤 名称搜索</div>
+                        <div style="font-size:13px;color:var(--text-dim)">输入"M3 螺丝"即可匹配所有 M3 系列螺丝</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">🔢 型号搜索</div>
+                        <div style="font-size:13px;color:var(--text-dim)">输入型号如"WS2812B"精确匹配零件</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">📂 类别搜索</div>
+                        <div style="font-size:13px;color:var(--text-dim)">按分类浏览：螺丝、轴承、电控、传感器等</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">⚡ 实时匹配</div>
+                        <div style="font-size:13px;color:var(--text-dim)">输入即时显示结果，无需等待</div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">技术实现</h3>
+                <p>ESP32-C3 通过 WiFi 连接服务器，接收搜索请求后扫描本地数据库，使用 Levenshtein 距离算法进行模糊匹配，50ms 内返回结果</p>
+            `
+        },
+        2: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            title: '多人并发',
+            subtitle: '最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">并发机制</h3>
+                <p style="margin-bottom:24px">系统支持最多 7 名队员同时查找不同零件。每个用户的请求通过独立的 WebSocket 连接处理，互不干扰</p>
+                <div style="margin-bottom:24px">
+                    <div style="font-weight:600;margin-bottom:12px">颜色编码方案</div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap">
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ff3b30"></div>用户 1
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ff9500"></div>用户 2
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ffcc00"></div>用户 3
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#34c759"></div>用户 4
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#007aff"></div>用户 5
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#5856d6"></div>用户 6
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#af52de"></div>用户 7
+                        </div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">蜂鸣器节奏区分</h3>
+                <p>每位用户的蜂鸣器频率和节奏模式不同（快速/中速/慢速/间歇），即使在嘈杂的比赛准备环境中也能辨别出自己的目标箱子</p>
+            `
+        },
+        3: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+            title: '飞书登录',
+            subtitle: 'OAuth 身份验证，仅限 IronPulse 6941 队员使用',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">安全保障</h3>
+                <p style="margin-bottom:24px">系统通过飞书 OAuth 2.0 进行身份验证，确保只有 IronPulse 6941 的正式队员可以使用系统</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">扫码登录</div><div style="font-size:13px;color:var(--text-dim)">用飞书扫描网页上的二维码，一键完成身份验证</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">权限校验</div><div style="font-size:13px;color:var(--text-dim)">系统自动验证用户是否属于 IronPulse 6941 群组</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">角色分配</div><div style="font-size:13px;color:var(--text-dim)">管理员和普通队员拥有不同的操作权限</div></div>
+                    </div>
+                </div>
+            `
+        },
+        4: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
+            title: '电量监控',
+            subtitle: '电池电压实时监测，低电量自动飞书通知管理员',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">智能监控</h3>
+                <p style="margin-bottom:24px">每个 FindIt 设备内置电压检测电路，通过 ADC 实时监测电池状态</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+                    <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
+                        <div style="font-size:36px;font-weight:700;color:var(--accent-ink)">3.3V</div>
+                        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">工作电压</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
+                        <div style="font-size:36px;font-weight:700;color:#ff9500">&lt;3.0V</div>
+                        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">低电量警报阈值</div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">通知机制</h3>
+                <p>当电池电压低于 3.0V 时，系统自动通过飞书机器人向管理员发送低电量提醒，包含设备编号和当前电压值。管理员可以及时更换电池，避免比赛中断</p>
+            `
+        },
+        5: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+            title: '零件管理',
+            subtitle: '管理员可增删改查零件信息，按名称、型号、类别搜索',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">管理后台</h3>
+                <p style="margin-bottom:24px">管理员通过 Web 后台管理所有零件信息，支持完整的 CRUD 操作</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">📝</div>
+                        <div><div style="font-weight:600">添加零件</div><div style="font-size:13px;color:var(--text-dim)">录入零件名称、型号、类别，指定存放箱子</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">✏️</div>
+                        <div><div style="font-weight:600">编辑信息</div><div style="font-size:13px;color:var(--text-dim)">修改零件信息或调整存放位置</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">🗑️</div>
+                        <div><div style="font-weight:600">删除零件</div><div style="font-size:13px;color:var(--text-dim)">移除已用完或不再需要的零件记录</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">📦</div>
+                        <div><div style="font-weight:600">箱子管理</div><div style="font-size:13px;color:var(--text-dim)">每个箱子最多 3 种零件，清晰明了，避免混乱</div></div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">数据结构</h3>
+                <div style="background:var(--surface);border-radius:12px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8">
+                    <div style="color:var(--accent-ink)">FINDIT-001</div>
+                    <div>├── M3×10 螺丝 <span style="color:var(--text-dim)">(螺丝)</span></div>
+                    <div>├── M5 防松螺母 <span style="color:var(--text-dim)">(螺母)</span></div>
+                    <div>└── 垫片 M5×12×1 <span style="color:var(--text-dim)">(垫片)</span></div>
+                    <div style="color:var(--accent-ink);margin-top:8px">FINDIT-003</div>
+                    <div>├── 公制轴承 D5 <span style="color:var(--text-dim)">(轴承)</span></div>
+                    <div>├── Falcon 起步齿轮 <span style="color:var(--text-dim)">(齿轮)</span></div>
+                    <div>└── 公制法兰轴承 D8 <span style="color:var(--text-dim)">(轴承)</span></div>
+                </div>
+            `
+        }
+    },
+    en: {
+        1: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+            title: 'Smart Search',
+            subtitle: 'Search by name, model, or category with instant fuzzy matching',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">How It Works</h3>
+                <p style="margin-bottom:24px">The system uses fuzzy matching to find parts by name, model number, or category. No need to remember exact part numbers — just type a partial keyword and get instant results</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">🔤 Name Search</div>
+                        <div style="font-size:13px;color:var(--text-dim)">Type "M3 screw" to match all M3 series</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">🔢 Model Search</div>
+                        <div style="font-size:13px;color:var(--text-dim)">Enter model numbers like "WS2812B" for exact matches</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">📂 Category Browse</div>
+                        <div style="font-size:13px;color:var(--text-dim)">Browse by type: screws, bearings, electronics, sensors</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px">
+                        <div style="font-weight:600;margin-bottom:6px">⚡ Instant Results</div>
+                        <div style="font-size:13px;color:var(--text-dim)">Results appear as you type, zero wait time</div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Tech Details</h3>
+                <p>ESP32-C3 connects to the server via WiFi, scans the local database using Levenshtein distance fuzzy matching, returns results within 50ms</p>
+            `
+        },
+        2: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            title: 'Multi-user',
+            subtitle: 'Up to 7 people searching simultaneously with unique LED colors and beep patterns',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Concurrency</h3>
+                <p style="margin-bottom:24px">The system supports up to 7 team members searching for different parts at the same time. Each user's request is handled through an independent WebSocket connection</p>
+                <div style="margin-bottom:24px">
+                    <div style="font-weight:600;margin-bottom:12px">Color Coding</div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap">
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ff3b30"></div>User 1
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ff9500"></div>User 2
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#ffcc00"></div>User 3
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#34c759"></div>User 4
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#007aff"></div>User 5
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#5856d6"></div>User 6
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px">
+                            <div style="width:12px;height:12px;border-radius:50%;background:#af52de"></div>User 7
+                        </div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Audio Distinction</h3>
+                <p>Each user gets a unique buzzer frequency and rhythm pattern (fast/medium/slow/intermittent), so you can identify your target box even in a noisy competition environment</p>
+            `
+        },
+        3: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+            title: 'Feishu Login',
+            subtitle: 'OAuth authentication — only IronPulse 6941 team members can access',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Security</h3>
+                <p style="margin-bottom:24px">The system authenticates via Feishu OAuth 2.0, ensuring only official IronPulse 6941 team members can use the system</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">QR Code Login</div><div style="font-size:13px;color:var(--text-dim)">Scan the QR code on the webpage with Feishu for one-tap authentication</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">Access Control</div><div style="font-size:13px;color:var(--text-dim)">System verifies membership in the IronPulse 6941 group</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
+                        <div><div style="font-weight:600;margin-bottom:4px">Role Assignment</div><div style="font-size:13px;color:var(--text-dim)">Admins and regular members get different permission levels</div></div>
+                    </div>
+                </div>
+            `
+        },
+        4: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
+            title: 'Battery Monitor',
+            subtitle: 'Real-time voltage monitoring with automatic low-battery alerts via Feishu',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Smart Monitoring</h3>
+                <p style="margin-bottom:24px">Each FindIt unit has a built-in voltage sensing circuit that monitors battery status in real-time via ADC</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+                    <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
+                        <div style="font-size:36px;font-weight:700;color:var(--accent-ink)">3.3V</div>
+                        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">Operating Voltage</div>
+                    </div>
+                    <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
+                        <div style="font-size:36px;font-weight:700;color:#ff9500">&lt;3.0V</div>
+                        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">Low Battery Threshold</div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Alert System</h3>
+                <p>When battery drops below 3.0V, the system automatically sends a low-battery alert to admins via Feishu bot, including device ID and current voltage. Admins can swap batteries before competition is affected</p>
+            `
+        },
+        5: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+            title: 'Parts Management',
+            subtitle: 'Admins can add, edit, and search parts by name, model, or category',
+            body: `
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Admin Dashboard</h3>
+                <p style="margin-bottom:24px">Admins manage all parts through a web dashboard with full CRUD operations</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">📝</div>
+                        <div><div style="font-weight:600">Add Parts</div><div style="font-size:13px;color:var(--text-dim)">Enter part name, model, category, and assign a storage box</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">✏️</div>
+                        <div><div style="font-weight:600">Edit Info</div><div style="font-size:13px;color:var(--text-dim)">Update part details or change storage location</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">🗑️</div>
+                        <div><div style="font-weight:600">Remove Parts</div><div style="font-size:13px;color:var(--text-dim)">Delete used or obsolete part records</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
+                        <div style="font-size:24px">📦</div>
+                        <div><div style="font-weight:600">Box Management</div><div style="font-size:13px;color:var(--text-dim)">Max 3 part types per box — clean and organized</div></div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Data Structure</h3>
+                <div style="background:var(--surface);border-radius:12px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8">
+                    <div style="color:var(--accent-ink)">FINDIT-001</div>
+                    <div>├── M3×10 Screw <span style="color:var(--text-dim)">(Screw)</span></div>
+                    <div>├── M5 Lock Nut <span style="color:var(--text-dim)">(Nut)</span></div>
+                    <div>└── Washer M5×12×1 <span style="color:var(--text-dim)">(Washer)</span></div>
+                    <div style="color:var(--accent-ink);margin-top:8px">FINDIT-003</div>
+                    <div>├── Metric Bearing D5 <span style="color:var(--text-dim)">(Bearing)</span></div>
+                    <div>├── Falcon Starter Gear <span style="color:var(--text-dim)">(Gear)</span></div>
+                    <div>└── Metric Flange Bearing D8 <span style="color:var(--text-dim)">(Bearing)</span></div>
+                </div>
+            `
+        }
+    }
+};
+
+function openFeature(id) {
+    const dict = lang === 'zh' ? featureDetails.zh : featureDetails.en;
+    const feature = dict[id];
+    if (!feature) return;
+
+    const modal = document.getElementById('feature-modal');
+    const content = document.getElementById('modal-content');
+
+    document.getElementById('modal-icon').innerHTML = feature.icon;
+    document.getElementById('modal-title').textContent = feature.title;
+    document.getElementById('modal-subtitle').textContent = feature.subtitle;
+    document.getElementById('modal-body').innerHTML = feature.body;
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Animate in
+    requestAnimationFrame(() => {
+        content.style.transform = 'translateY(0)';
+        content.style.opacity = '1';
+    });
+}
+
+function closeFeature() {
+    const modal = document.getElementById('feature-modal');
+    const content = document.getElementById('modal-content');
+
+    content.style.transform = 'translateY(20px)';
+    content.style.opacity = '0';
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 300);
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeFeature();
+});
+
+// ===== How-It-Works step details (opened from the 三步找到零件 / Three Steps section) =====
+const stepDetails = {
+    zh: {
+        1: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+            title: '01 · 搜索',
+            subtitle: '扫码或用飞书打开操控页，输入零件名称、型号或类别',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">怎么进入</h3>
+                <p style="margin-bottom:24px">每个零件箱上都贴有二维码，手机一扫即可打开操控网页；也可以在飞书群里 @寻物机器人，直接发送零件名称。</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">怎么搜索</h3>
+                <p style="margin-bottom:24px">采用模糊匹配，不用记住精确编号——输入「M3 螺丝」「轴承」「齿轮」等关键词，结果实时显示。</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔤 名称搜索</div><div style="font-size:13px;color:var(--text-dim)">输入名称即可匹配同系列零件</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔢 型号搜索</div><div style="font-size:13px;color:var(--text-dim)">按精确型号快速定位</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">📂 类别浏览</div><div style="font-size:13px;color:var(--text-dim)">按螺丝 / 轴承 / 电控等分类查找</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">⚡ 实时匹配</div><div style="font-size:13px;color:var(--text-dim)">边输入边出结果，无需等待</div></div>
+                </div>
+            `
+        },
+        2: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+            title: '02 · 定位',
+            subtitle: '目标零件箱自动响铃闪灯，颜色和节奏区分不同用户',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">箱子会「喊你」</h3>
+                <p style="margin-bottom:24px">选中零件后，对应的零件箱会立刻亮起 LED 并发出蜂鸣，即使在嘈杂的比赛准备区，也能一眼、一耳找到目标箱子。</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">多人同时找也不会乱</h3>
+                <p style="margin-bottom:20px">最多 7 人同时查找，每人分配不同颜色的 LED 和不同节奏的蜂鸣，各找各的，互不干扰。</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ff3b30"></div>用户 1</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ff9500"></div>用户 2</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ffcc00"></div>用户 3</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#34c759"></div>用户 4</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#007aff"></div>用户 5</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#5856d6"></div>用户 6</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#af52de"></div>用户 7</div>
+                </div>
+            `
+        },
+        3: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg>',
+            title: '03 · 取件',
+            subtitle: '拿到零件，点击确认，响铃停止——全程不到 30 秒',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">取件即完成</h3>
+                <p style="margin-bottom:24px">找到箱子、拿到零件后，在手机上点「已取到零件」，对应箱子的响铃和闪灯会立即停止，把箱子释放给下一位队员。</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">又快又准</h3>
+                <p style="margin-bottom:24px">从搜索到取件，整个过程通常不到 30 秒，比翻箱倒柜快得多，也避免了零件错拿、乱放。</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">&lt;30s</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">定位用时</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">40</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">零件箱覆盖</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">7</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">同时查找</div></div>
+                </div>
+            `
+        }
+    },
+    en: {
+        1: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+            title: '01 · Search',
+            subtitle: 'Open the control page via QR or Feishu, then type a part name, model, or category',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">How to get in</h3>
+                <p style="margin-bottom:24px">Every parts bin has a QR code — scan it with your phone to open the control page. Or just @FindItem in your Feishu group and send the part name.</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">How to search</h3>
+                <p style="margin-bottom:24px">Fuzzy matching means you don't need exact part numbers — type "M3 screw", "bearing", "gear" and results appear instantly.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔤 By Name</div><div style="font-size:13px;color:var(--text-dim)">Match a whole series by name</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔢 By Model</div><div style="font-size:13px;color:var(--text-dim)">Pinpoint an exact model number</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">📂 By Category</div><div style="font-size:13px;color:var(--text-dim)">Browse screws / bearings / electronics</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">⚡ Instant</div><div style="font-size:13px;color:var(--text-dim)">Results as you type, zero wait</div></div>
+                </div>
+            `
+        },
+        2: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+            title: '02 · Locate',
+            subtitle: 'The target bin beeps and flashes — colors and rhythms tell users apart',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">The bin calls out to you</h3>
+                <p style="margin-bottom:24px">Once you pick a part, its bin instantly lights up an LED and sounds a buzzer — so you can spot it even in a noisy competition pit.</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">No chaos with many users</h3>
+                <p style="margin-bottom:20px">Up to 7 people can search at once — each gets a unique LED color and buzzer rhythm, so everyone finds their own part without interference.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ff3b30"></div>User 1</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ff9500"></div>User 2</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#ffcc00"></div>User 3</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#34c759"></div>User 4</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#007aff"></div>User 5</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#5856d6"></div>User 6</div>
+                    <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:8px 14px"><div style="width:12px;height:12px;border-radius:50%;background:#af52de"></div>User 7</div>
+                </div>
+            `
+        },
+        3: {
+            icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg>',
+            title: '03 · Pick Up',
+            subtitle: 'Grab the part, tap confirm, the buzzer stops — under 30 seconds total',
+            body: `
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Done on pickup</h3>
+                <p style="margin-bottom:24px">After you reach the bin and grab the part, tap "Part Retrieved" on your phone — the bin's buzzer and LED stop immediately and the bin is freed for the next teammate.</p>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Fast and precise</h3>
+                <p style="margin-bottom:24px">From search to pickup, the whole thing usually takes under 30 seconds — far faster than rummaging, and it prevents grabbing or misplacing the wrong part.</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">&lt;30s</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">Locate time</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">40</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">Parts bins</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--accent-ink)">7</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">Concurrent users</div></div>
+                </div>
+            `
+        }
+    }
+};
+
+function openStep(id) {
+    const dict = lang === 'zh' ? stepDetails.zh : stepDetails.en;
+    const step = dict[id];
+    if (!step) return;
+
+    document.getElementById('modal-icon').innerHTML = step.icon;
+    document.getElementById('modal-title').textContent = step.title;
+    document.getElementById('modal-subtitle').textContent = step.subtitle;
+    document.getElementById('modal-body').innerHTML = step.body;
+
+    const modal = document.getElementById('feature-modal');
+    const content = document.getElementById('modal-content');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+        content.style.transform = 'translateY(0)';
+        content.style.opacity = '1';
+    });
+}
