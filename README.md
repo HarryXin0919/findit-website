@@ -1,11 +1,21 @@
+<div align="center">
+
+<img src="assets/banner.svg" alt="FindItem · 寻物 — Open-source Smart Parts Locator" width="820">
+
 # FindItem · 寻物
 
-> **Smart Parts Locator for IronPulse 6941** — 30-second part location: scan, beep, find.
-> **IronPulse 6941 智能零件定位系统** — 30 秒找到任意零件:扫码、响铃、定位。
+**30-second part location: scan · beep · find**
+**扫码、响铃、定位 —— 30 秒找到任意零件**
 
-🌐 **Live / 线上**: <https://harryxin0919.github.io/findit-website/>
-🔗 **Custom domain / 自定义域名 (pending)**: <https://finditem.is-a.dev>
-🤖 **Built by / 制作团队**: IronPulse 6941
+[![Live demo](https://img.shields.io/badge/live-demo-61C4E3?style=flat-square&labelColor=0B0E11&logo=github&logoColor=white)](https://harryxin0919.github.io/findit-website/)
+[![Pages deploy](https://img.shields.io/github/deployments/HarryXin0919/findit-website/github-pages?style=flat-square&label=pages&labelColor=0B0E11&color=2ea44f)](https://github.com/HarryXin0919/findit-website/deployments)
+[![Custom domain](https://img.shields.io/badge/finditem-is--a.dev-61C4E3?style=flat-square&labelColor=0B0E11)](https://finditem.is-a.dev)
+![Find in 30s](https://img.shields.io/badge/find_in-30s-61C4E3?style=flat-square&labelColor=0B0E11)
+![Open source](https://img.shields.io/badge/open-source-61C4E3?style=flat-square&labelColor=0B0E11)
+
+🌐 **Live / 线上**: <https://harryxin0919.github.io/findit-website/> · 🔗 **Domain (pending)**: <https://finditem.is-a.dev>
+
+</div>
 
 ---
 

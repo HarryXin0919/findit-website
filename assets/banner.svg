@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="FindItem - Open-source Smart Parts Locator">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0E11"/>
+      <stop offset="1" stop-color="#11171D"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7FD3EC"/>
+      <stop offset="1" stop-color="#2E9BC4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#61C4E3" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#61C4E3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- card -->
+  <rect x="0" y="0" width="1280" height="360" rx="28" fill="url(#bg)"/>
+  <rect x="1" y="1" width="1278" height="358" rx="27" fill="none" stroke="#61C4E3" stroke-opacity="0.14" stroke-width="2"/>
+
+  <!-- locator glow + pulse rings -->
+  <circle cx="222" cy="180" r="150" fill="url(#glow)"/>
+  <circle cx="210" cy="170" r="104" fill="none" stroke="#61C4E3" stroke-opacity="0.07" stroke-width="2"/>
+  <circle cx="210" cy="170" r="132" fill="none" stroke="#61C4E3" stroke-opacity="0.04" stroke-width="2"/>
+
+  <!-- magnifier ring + handle -->
+  <circle cx="210" cy="170" r="80" fill="none" stroke="url(#cyan)" stroke-width="15"/>
+  <line x1="267" y1="227" x2="318" y2="278" stroke="url(#cyan)" stroke-width="17" stroke-linecap="round"/>
+
+  <!-- crosshair target -->
+  <circle cx="210" cy="170" r="11" fill="#61C4E3"/>
+  <line x1="210" y1="120" x2="210" y2="142" stroke="#61C4E3" stroke-width="5" stroke-linecap="round"/>
+  <line x1="210" y1="198" x2="210" y2="220" stroke="#61C4E3" stroke-width="5" stroke-linecap="round"/>
+  <line x1="160" y1="170" x2="182" y2="170" stroke="#61C4E3" stroke-width="5" stroke-linecap="round"/>
+  <line x1="238" y1="170" x2="260" y2="170" stroke="#61C4E3" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- wordmark -->
+  <text x="430" y="158" font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif" font-weight="600" font-size="94" fill="#F5F7FA">Find<tspan fill="#61C4E3">Item</tspan></text>
+
+  <!-- subtitle (bilingual) -->
+  <text x="434" y="212" font-family="'Helvetica Neue', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif" font-weight="400" font-size="30" fill="#9AA7B2">Smart Parts Locator &#183; &#23547;&#29289;</text>
+
+  <!-- tagline -->
+  <text x="436" y="266" font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif" font-weight="600" font-size="22" letter-spacing="3" fill="#61C4E3">SCAN &#183; BEEP &#183; FIND &#8212; UNDER 30 SECONDS</text>
+
+  <!-- team tag -->
+  <text x="438" y="308" font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="4" fill="#5A6671">IRONPULSE 6941</text>
+</svg>
