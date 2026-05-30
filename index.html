@@ -692,7 +692,7 @@
                 <div class="feature" onclick="openFeature(3)" style="cursor:pointer">
                     <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
                     <h3 data-i18n="feat3_title">飞书登录</h3>
-                    <p data-i18n="feat3_desc">OAuth 身份验证，仅限 IronPulse 6941 队员使用</p>
+                    <p data-i18n="feat3_desc">可选的 OAuth 身份验证，自托管可控</p>
                 </div>
                 <div class="feature" onclick="openFeature(4)" style="cursor:pointer">
                     <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
@@ -875,7 +875,7 @@
             <span class="footer-dot">·</span>
             <a href="#">GitHub</a>
             <span class="footer-dot">·</span>
-            <a href="https://www.ironpulse.net" target="_blank">IronPulse 6941</a>
+            <a href="https://github.com/HarryXin0919/FindItem" target="_blank" rel="noopener">GitHub</a>
         </div>
     </footer>
 
@@ -938,7 +938,7 @@
             feat_eyebrow: '功能', feat_title: '为机器人社打造',
             feat1_title: '模糊搜索', feat1_desc: '输入名称、型号或类别，实时匹配，不用翻箱倒柜',
             feat2_title: '多人并发', feat2_desc: '最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏',
-            feat3_title: '飞书登录', feat3_desc: 'OAuth 身份验证，仅限 IronPulse 6941 队员使用',
+            feat3_title: '飞书登录', feat3_desc: '可选的 OAuth 身份验证，自托管可控',
             feat4_title: '电量监控', feat4_desc: '电池电压实时监测，低电量自动飞书通知管理员',
             feat5_title: '零件管理', feat5_desc: '管理员可增删改查零件信息，按名称、型号、类别搜索，每个箱子最多 3 种零件，清晰明了',
             demo_eyebrow: '操控演示', demo_title: '完整操控流程',
@@ -977,10 +977,10 @@
             step2_title: 'Locate', step2_desc: 'The target box beeps and flashes LEDs — colors and rhythms distinguish users',
             step3_title: 'Pick Up', step3_desc: 'Grab the part, tap confirm, done — under 30 seconds total',
             step_more: 'Learn more →',
-            feat_eyebrow: 'Features', feat_title: 'Built for the robotics team',
+            feat_eyebrow: 'Features', feat_title: 'For makerspaces, labs & workshops',
             feat1_title: 'Smart Search', feat1_desc: 'Search by name, model, or category with instant fuzzy matching',
             feat2_title: 'Multi-user', feat2_desc: 'Up to 7 people searching simultaneously, each with unique LED color and beep pattern',
-            feat3_title: 'Feishu Login', feat3_desc: 'OAuth authentication — only IronPulse 6941 team members can access',
+            feat3_title: 'Feishu Login', feat3_desc: 'Optional OAuth authentication — self-hostable and under your control',
             feat4_title: 'Battery Monitor', feat4_desc: 'Real-time voltage monitoring with automatic low-battery alerts via Feishu',
             feat5_title: 'Parts Management', feat5_desc: 'Admins can add, edit, and search parts by name, model, or category — max 3 part types per box',
             demo_eyebrow: 'Live Demo', demo_title: 'Complete Control Flow',
@@ -1057,7 +1057,7 @@
         // ========== API Abstraction Layer ==========
         // 切换模式："demo" = 本地演示，"live" = 连接后端
         const API_MODE = "demo";
-        const API_BASE = ""; // 后端地址，如 "https://api.finditem.ironpulse.net"
+        const API_BASE = ""; // 后端地址，如 "https://api.example.com"
         let currentUser = null; // 登录后从 session 获取用户信息
 
         const Api = {

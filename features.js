@@ -36,7 +36,7 @@ const featureDetails = {
             subtitle: '最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏',
             body: `
                 <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">并发机制</h3>
-                <p style="margin-bottom:24px">系统支持最多 7 名队员同时查找不同零件。每个用户的请求通过独立的 WebSocket 连接处理，互不干扰</p>
+                <p style="margin-bottom:24px">系统支持最多 7 名用户同时查找不同零件。每个用户的请求通过独立的 WebSocket 连接处理，互不干扰</p>
                 <div style="margin-bottom:24px">
                     <div style="font-weight:600;margin-bottom:12px">颜色编码方案</div>
                     <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -70,10 +70,10 @@ const featureDetails = {
         3: {
             icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
             title: '飞书登录',
-            subtitle: 'OAuth 身份验证，仅限 IronPulse 6941 队员使用',
+            subtitle: '可选的 OAuth 身份验证，自托管可控',
             body: `
                 <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">安全保障</h3>
-                <p style="margin-bottom:24px">系统通过飞书 OAuth 2.0 进行身份验证，确保只有 IronPulse 6941 的正式队员可以使用系统</p>
+                <p style="margin-bottom:24px">系统可选接入飞书 OAuth 2.0 进行身份验证，限定允许使用的用户范围（自托管时由你自行配置）</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
@@ -81,11 +81,11 @@ const featureDetails = {
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
-                        <div><div style="font-weight:600;margin-bottom:4px">权限校验</div><div style="font-size:13px;color:var(--text-dim)">系统自动验证用户是否属于 IronPulse 6941 群组</div></div>
+                        <div><div style="font-weight:600;margin-bottom:4px">权限校验</div><div style="font-size:13px;color:var(--text-dim)">系统自动验证用户是否属于你配置的允许群组</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
-                        <div><div style="font-weight:600;margin-bottom:4px">角色分配</div><div style="font-size:13px;color:var(--text-dim)">管理员和普通队员拥有不同的操作权限</div></div>
+                        <div><div style="font-weight:600;margin-bottom:4px">角色分配</div><div style="font-size:13px;color:var(--text-dim)">管理员和普通用户拥有不同的操作权限</div></div>
                     </div>
                 </div>
             `
@@ -220,10 +220,10 @@ const featureDetails = {
         3: {
             icon: '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
             title: 'Feishu Login',
-            subtitle: 'OAuth authentication — only IronPulse 6941 team members can access',
+            subtitle: 'Optional OAuth authentication — self-hostable and under your control',
             body: `
                 <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Security</h3>
-                <p style="margin-bottom:24px">The system authenticates via Feishu OAuth 2.0, ensuring only official IronPulse 6941 team members can use the system</p>
+                <p style="margin-bottom:24px">The system can optionally authenticate via Feishu OAuth 2.0, restricting access to the user group you configure (you set this up when self-hosting)</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
@@ -231,7 +231,7 @@ const featureDetails = {
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
-                        <div><div style="font-weight:600;margin-bottom:4px">Access Control</div><div style="font-size:13px;color:var(--text-dim)">System verifies membership in the IronPulse 6941 group</div></div>
+                        <div><div style="font-weight:600;margin-bottom:4px">Access Control</div><div style="font-size:13px;color:var(--text-dim)">System verifies membership in the group you configure</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
                         <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
@@ -389,7 +389,7 @@ const stepDetails = {
             subtitle: '拿到零件，点击确认，响铃停止——全程不到 30 秒',
             body: `
                 <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">取件即完成</h3>
-                <p style="margin-bottom:24px">找到箱子、拿到零件后，在手机上点「已取到零件」，对应箱子的响铃和闪灯会立即停止，把箱子释放给下一位队员。</p>
+                <p style="margin-bottom:24px">找到箱子、拿到零件后，在手机上点「已取到零件」，对应箱子的响铃和闪灯会立即停止，把箱子释放给下一位用户。</p>
                 <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">又快又准</h3>
                 <p style="margin-bottom:24px">从搜索到取件，整个过程通常不到 30 秒，比翻箱倒柜快得多，也避免了零件错拿、乱放。</p>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
