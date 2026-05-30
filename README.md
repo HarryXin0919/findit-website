@@ -21,11 +21,11 @@
 
 ## 🎯 About / 关于项目
 
-**EN** — FindItem is a smart parts locator built for the **IronPulse 6941** robotics team. Each parts bin is equipped with an ESP32, LED, and buzzer — team members search for a part by phone or Feishu, and the target bin instantly lights up and beeps. From search to pickup: under 30 seconds.
+**EN** — FindItem is an **open-source** smart parts locator. Each parts bin is equipped with an ESP32, LED, and buzzer — search for a part by phone or web, and the target bin instantly lights up and beeps. From search to pickup: under 30 seconds.
 
 This repository is the **public-facing landing page** of the project — a vanilla static website that explains how the system works, showcases the five core features, and includes an interactive end-to-end demo.
 
-**中文** — 为 **IronPulse 6941** 机器人队设计的智能零件定位系统。每个零件箱装上 ESP32 + LED + 蜂鸣器——队员通过手机或飞书搜索零件,目标箱子自动响铃闪灯,从搜索到取件不到 30 秒。
+**中文** — 一个**开源**的智能零件定位系统。每个零件箱装上 ESP32 + LED + 蜂鸣器——通过手机或网页搜索零件,目标箱子自动响铃闪灯,从搜索到取件不到 30 秒。
 
 本仓库是该项目的**官网/落地页**——一个纯静态网站,展示系统原理、5 大功能,并内置可交互的全流程演示。
 
@@ -37,7 +37,7 @@ This repository is the **public-facing landing page** of the project — a vanil
 |---|---|---|
 | 🔍 **Smart Search / 模糊搜索** | Fuzzy match by name, model, or category — no exact codes needed | 按名称、型号或类别实时匹配,无需精确编号 |
 | 👥 **Multi-user / 多人并发** | Up to 7 simultaneous users, unique LED color + beep rhythm per user | 最多 7 人同时查找,每人独立 LED 颜色 + 蜂鸣节奏 |
-| 🔐 **Feishu Login / 飞书登录** | OAuth 2.0 — team members only | OAuth 2.0 身份验证,仅限 IronPulse 6941 队员 |
+| 🔐 **Feishu Login / 飞书登录** | OAuth 2.0 sign-in | OAuth 2.0 身份验证 |
 | 🔋 **Battery Monitor / 电量监控** | Real-time voltage check, auto Feishu alerts on low battery | 实时电压检测,低电量自动飞书通知管理员 |
 | 📦 **Parts Management / 零件管理** | Admin CRUD dashboard, max 3 part types per bin | 管理员后台 CRUD,每个箱子最多 3 种零件 |
 
@@ -176,11 +176,9 @@ No build step, pure static hosting. Custom domain (`finditem.is-a.dev`) is provi
 
 ## 🤝 Credits / 致谢
 
-**Designed, built, and maintained by IronPulse 6941.**
-**由 IronPulse 6941 机器人队设计、开发、维护。**
-
-🔗 [Team homepage / 团队主页 — ironpulse.net](https://www.ironpulse.net)
+**An open-source project by [@HarryXin0919](https://github.com/HarryXin0919).**
+**开源项目,由 [@HarryXin0919](https://github.com/HarryXin0919) 开发维护。**
 
 ---
 
-<sub>© 2026 IronPulse 6941 · Built with HTML, CSS, JavaScript, and a lot of M3 screws / 建于代码与无数 M3 螺丝。</sub>
+<sub>© 2026 Harry Xin · Built with HTML, CSS, JavaScript, and a lot of M3 screws / 建于代码与无数 M3 螺丝。</sub>
