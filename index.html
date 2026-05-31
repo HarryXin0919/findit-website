@@ -146,12 +146,13 @@
             background: linear-gradient(180deg, var(--bg) 2%, rgba(0,0,0,0.2) 32%, rgba(0,0,0,0.2) 68%, var(--bg) 98%);
             pointer-events: none;
         }
-        .hero-bg::before { background-image: url('img/cropped/hero.jpg'); }
-        .stats-bg::before { background-image: url('img/cropped/stats.jpg'); }
-        .how-bg::before { background-image: url('img/cropped/how.jpg'); }
-        .features-bg::before { background-image: url('img/cropped/features.jpg'); }
-        .roadmap-bg::before { background-image: url('img/cropped/roadmap.jpg'); }
-        .demo-bg::before { background-image: url('img/cropped/demo.jpg'); }
+        /* 蓝/白/黑品牌渐变背景(替换原比赛照片,去掉所有战队影像,呈现开源软件项目观感) */
+        .hero-bg::before     { background-image: radial-gradient(circle at 50% 32%, rgba(97,196,227,0.28), rgba(97,196,227,0.04) 42%, #0B0E11 72%); }
+        .stats-bg::before    { background-image: linear-gradient(135deg, #0B0E11 0%, #11171D 60%, #0e1a22 100%); }
+        .how-bg::before      { background-image: radial-gradient(circle at 28% 42%, rgba(97,196,227,0.18), rgba(11,14,17,0) 55%), #0B0E11; }
+        .features-bg::before { background-image: linear-gradient(160deg, #0d1622 0%, #0B0E11 70%); }
+        .roadmap-bg::before  { background-image: radial-gradient(circle at 72% 48%, rgba(46,155,196,0.20), rgba(11,14,17,0) 58%), #0B0E11; }
+        .demo-bg::before     { background-image: linear-gradient(205deg, #0e1820 0%, #0B0E11 65%); }
 
         .section-bg > * { position: relative; z-index: 1; }
 
