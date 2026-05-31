@@ -9,11 +9,10 @@
 
 [![Live demo](https://img.shields.io/badge/live-demo-61C4E3?style=flat-square&labelColor=0B0E11&logo=github&logoColor=white)](https://harryxin0919.github.io/findit-website/)
 [![Pages deploy](https://img.shields.io/github/deployments/HarryXin0919/findit-website/github-pages?style=flat-square&label=pages&labelColor=0B0E11&color=2ea44f)](https://github.com/HarryXin0919/findit-website/deployments)
-[![Custom domain](https://img.shields.io/badge/finditem-is--a.dev-61C4E3?style=flat-square&labelColor=0B0E11)](https://finditem.is-a.dev)
 ![Find in 30s](https://img.shields.io/badge/find_in-30s-61C4E3?style=flat-square&labelColor=0B0E11)
-![Open source](https://img.shields.io/badge/open-source-61C4E3?style=flat-square&labelColor=0B0E11)
+[![License: MIT](https://img.shields.io/badge/license-MIT-61C4E3?style=flat-square&labelColor=0B0E11)](LICENSE)
 
-🌐 **Live / 线上**: <https://harryxin0919.github.io/findit-website/> · 🔗 **Domain (pending)**: <https://finditem.is-a.dev>
+🌐 **Live / 线上**: <https://harryxin0919.github.io/findit-website/>
 
 </div>
 
@@ -146,8 +145,8 @@ git push
 # Live in ~30 seconds / 30 秒后线上更新
 ```
 
-No build step, pure static hosting. Custom domain (`finditem.is-a.dev`) is provided free by [is-a.dev](https://www.is-a.dev/).
-零构建步骤,纯静态托管。自定义域名 (`finditem.is-a.dev`) 由 [is-a.dev](https://www.is-a.dev/) 提供免费子域名。
+No build step, pure static hosting.
+零构建步骤,纯静态托管。
 
 ---
 
@@ -178,6 +177,11 @@ No build step, pure static hosting. Custom domain (`finditem.is-a.dev`) is provi
 
 **An open-source project by [@HarryXin0919](https://github.com/HarryXin0919).**
 **开源项目,由 [@HarryXin0919](https://github.com/HarryXin0919) 开发维护。**
+
+## 📄 License / 许可
+
+Released under the [MIT License](LICENSE).
+基于 [MIT 许可证](LICENSE) 开源。
 
 ---
 
