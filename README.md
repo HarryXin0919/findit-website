@@ -74,12 +74,16 @@ This repository is the **public-facing landing page** of the project — a vanil
 findit-website/
 ├── index.html        # Main page / 主页(~1400 lines, inline <style> + <script>)
 ├── features.js       # Feature & step modal data + logic / 功能/步骤弹窗数据与逻辑
-├── img/
-│   ├── cropped/      # Section background photos / 区块背景图
-│   └── logo/         # Logo variations / 各版本 logo
+├── assets/
+│   └── banner.svg    # README banner / 自述文件横幅
+├── LICENSE           # MIT
 ├── .gitignore
 └── README.md         # This file / 本文件
 ```
+
+> Section backgrounds use pure CSS gradients (no photos), so the site ships with
+> zero raster image assets — fast to load and light to clone.
+> 区块背景为纯 CSS 渐变(无照片),整站不含位图资源,加载快、克隆轻。
 
 ---
 
