@@ -164,12 +164,17 @@
         .nav-cta { background: var(--accent) !important; color: var(--accent-on) !important; padding: 7px 18px; border-radius: 980px; font-weight: 600; }
         .nav-icon-btn {
             background: none; border: 1px solid var(--surface-border); color: var(--text-dim);
-            width: 32px; height: 32px; border-radius: 980px; display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 980px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s; padding: 0;
         }
         .nav-icon-btn:hover { border-color: var(--surface-hover); color: var(--text); }
         .nav-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        @media (max-width: 768px) { .nav-links { display: none; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .nav-icon-btn { width: 44px; height: 44px; } }
+        /* Skip-to-content link for keyboard users */
+        .skip-link { position: fixed; top: 10px; left: 10px; z-index: 10000; background: var(--accent); color: var(--accent-on);
+            padding: 9px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none;
+            transform: translateY(-160%); transition: transform 0.2s ease; }
+        .skip-link:focus { transform: translateY(0); }
 
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
@@ -343,7 +348,30 @@
         .curtain-num { display: flex; align-items: baseline; font-family: var(--font-display); color: var(--text); }
         .curtain-pct { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
         .curtain-pct-sign { font-size: 17px; font-weight: 600; color: var(--text-dim); margin-left: 2px; }
-        .curtain-tag { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); }
+        .curtain-tag { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); transition: color 0.3s; }
+        .curtain-inner { display: flex; flex-direction: column; align-items: center; }
+        /* loader bin grid */
+        .loader-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 13px;
+            width: min(330px, 72vw); margin: 30px auto 0; opacity: 0; animation: curtainIn 0.7s ease forwards 0.3s; }
+        .lbox { position: relative; width: 100%; aspect-ratio: 48 / 44; }
+        .lbox svg { width: 100%; height: 100%; display: block; overflow: visible; transition: filter 0.3s; }
+        .lbox path { fill: var(--accent); fill-opacity: 0.04; stroke: var(--accent-ink); stroke-opacity: 0.28;
+            stroke-width: 1.6; stroke-linejoin: round; transition: stroke-opacity 0.25s, fill-opacity 0.25s, stroke 0.25s; }
+        .lbox .lb-led { fill: var(--accent-ink); opacity: 0.25; transition: opacity 0.25s, fill 0.25s; }
+        .lbox.scan path { stroke-opacity: 0.78; }
+        .lbox.scan .lb-led { opacity: 0.85; }
+        .lbox.scan svg { filter: drop-shadow(0 0 5px rgba(97,196,227,0.45)); }
+        .lbox.dim { opacity: 0.26; transition: opacity 0.5s ease; }     /* spotlight: everything else recedes */
+        .lbox.lit { z-index: 1; animation: lbPop 0.55s cubic-bezier(0.2,1.5,0.4,1) both; }
+        .lbox.lit path { stroke: var(--accent); stroke-opacity: 1; fill-opacity: 0.24; }
+        .lbox.lit .lb-led { opacity: 1; fill: var(--accent); }
+        .lbox.lit svg { filter: drop-shadow(0 0 15px rgba(97,196,227,0.95)); }
+        .lbox.lit::after, .lbox.lit::before { content: ''; position: absolute; inset: -6px;
+            border: 2px solid var(--accent); border-radius: 13px; opacity: 0; }
+        .lbox.lit::after { animation: lbPing 1s ease-out; }
+        .lbox.lit::before { animation: lbPing 1s ease-out 0.18s; }      /* twin ping = a confident "lock" */
+        @keyframes lbPing { 0% { transform: scale(0.55); opacity: 0.85; } 100% { transform: scale(1.85); opacity: 0; } }
+        @keyframes lbPop { 0% { transform: scale(0.8); } 55% { transform: scale(1.16); } 100% { transform: scale(1); } }
         @keyframes curtainIn { to { opacity: 1; transform: translateY(0); } }
 
         /* Hold the hero entrance until the curtain lifts */
@@ -456,7 +484,7 @@
 
         /* Flow Steps */
         .flow-steps {
-            display: flex; justify-content: center; gap: 0; margin-bottom: 48px;
+            display: flex; justify-content: center; align-items: center; gap: 0; margin-bottom: 48px;
         }
         .flow-step {
             display: flex; align-items: center; gap: 0;
@@ -473,22 +501,21 @@
             box-shadow: 0 0 20px rgba(97,196,227,0.3);
         }
         .flow-step.done .flow-step-dot {
-            background: #30d158; border-color: #30d158; color: #fff;
+            background: var(--accent); border-color: var(--accent); color: var(--accent-on);
         }
         .flow-step-label {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap;
             font-size: 12px; color: var(--text-dimmer); margin-top: 6px; text-align: center;
             transition: color 0.3s;
         }
         .flow-step.active .flow-step-label { color: var(--accent-ink); }
-        .flow-step.done .flow-step-label { color: #30d158; }
+        .flow-step.done .flow-step-label { color: var(--accent-ink); }
         .flow-step-line {
             width: 48px; height: 2px; background: var(--surface-border);
             margin: 0 4px; transition: background 0.4s;
             align-self: center;
         }
-        .flow-step.done + .flow-step .flow-step-line,
-        .flow-step.done ~ .flow-step-line { background: #30d158; }
-        .flow-step-inner { display: flex; flex-direction: column; align-items: center; }
+        .flow-step-inner { display: flex; flex-direction: column; align-items: center; position: relative; }
 
         /* Entry Cards */
         .entry-cards {
@@ -653,7 +680,6 @@
         /* card / demo-box / locate-box / confirm-stat backgrounds are now theme-aware via --card-bg / --surface — no light override needed */
         [data-theme="light"] .flow-step-dot { background: var(--card-hover); border-color: rgba(0,0,0,0.12); }
         [data-theme="light"] .flow-step-label { color: var(--text-dim); }
-        [data-theme="light"] .flow-step.done .flow-step-label { color: #30d158; }
 
         /* Roadmap */
         .roadmap { padding: 150px 24px; }
@@ -715,16 +741,19 @@
 </head>
 <body>
 
-    <!-- Cinematic loader -->
+    <!-- Loader: search the bins, light a random one at 100% -->
     <div id="curtain" aria-hidden="true">
         <div class="curtain-inner">
             <span class="curtain-brand">Find<span class="it">Item</span> 寻<span class="it">物</span></span>
+            <div class="loader-grid" id="loader-grid"></div>
         </div>
         <div class="curtain-meta">
             <span class="curtain-num"><span class="curtain-pct" id="curtain-pct">0</span><span class="curtain-pct-sign">%</span></span>
-            <span class="curtain-tag" data-i18n="loading_tag">正在加载体验</span>
+            <span class="curtain-tag" id="curtain-tag" data-i18n="loading_tag">正在定位零件…</span>
         </div>
     </div>
+
+    <a class="skip-link" href="#main" data-i18n="skip_main">跳到主内容</a>
 
     <!-- Nav -->
     <nav>
@@ -738,8 +767,8 @@
                     <li><a href="#roadmap" data-i18n="nav_roadmap">路线图</a></li>
                     <li><a href="#demo" class="nav-cta" data-i18n="nav_cta">开始使用</a></li>
                 </ul>
-                <button class="nav-icon-btn" onclick="toggleLang()" id="lang-btn" title="Switch Language">EN</button>
-                <button class="nav-icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle Theme">
+                <button class="nav-icon-btn" onclick="toggleLang()" id="lang-btn" title="Switch Language" aria-label="Switch language / 切换语言">EN</button>
+                <button class="nav-icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle Theme" aria-label="Toggle light / dark theme / 切换深浅主题">
                     <svg id="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                     <svg id="theme-icon-sun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 </button>
@@ -748,7 +777,7 @@
     </nav>
 
     <!-- Hero -->
-    <section class="hero section-bg hero-bg">
+    <section class="hero section-bg hero-bg" id="main" tabindex="-1" style="outline:none">
         <div class="hero-glow"></div>
         <div class="hero-label" data-i18n="hero_label">开源零件定位系统 · ESP32 + FastAPI + MQTT</div>
         <h1 data-i18n="hero_h1" data-i18n-html><span class="it">30 秒</span><br>找到你要的<span class="it">零件</span></h1>
@@ -1110,7 +1139,8 @@
         // ========== i18n ==========
         const zh = {
             nav_how: '原理', nav_features: '功能', nav_demo: '演示', nav_roadmap: '路线图', nav_cta: '开始使用',
-            loading_tag: '正在加载体验',
+            loading_tag: '正在定位零件…',
+            skip_main: '跳到主内容',
             hero_label: '开源零件定位系统 · ESP32 + FastAPI + MQTT',
             hero_h1: '<span class="it">30 秒</span><br>找到你要的<span class="it">零件</span>',
             hero_sub: '扫码搜索，箱子响铃，秒级定位 · ESP32-C3 固件 + 后端全部 MIT 开源',
@@ -1157,7 +1187,8 @@
 
         const en = {
             nav_how: 'How', nav_features: 'Features', nav_demo: 'Demo', nav_roadmap: 'Roadmap', nav_cta: 'Get Started',
-            loading_tag: 'Loading your experience',
+            loading_tag: 'Locating part…',
+            skip_main: 'Skip to content',
             hero_label: 'Open-source Parts Locator · ESP32 + FastAPI + MQTT',
             hero_h1: 'Find <span class="it">any part</span><br>in <span class="it">30 seconds</span>',
             hero_sub: 'Search, beep, flash — located instantly · ESP32-C3 firmware + backend, all MIT-licensed',
@@ -1312,7 +1343,7 @@
                 else if (s === step) el.classList.add('active');
             });
             lines.forEach((el, i) => {
-                el.style.background = (i + 1 < step) ? '#30d158' : '';
+                el.style.background = (i + 1 < step) ? 'var(--accent)' : '';
             });
             // Show panel
             document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
@@ -1618,11 +1649,13 @@
         }
         splitWave();
 
-        // ========== Cinematic loader (counts to 100%, then reveals) ==========
+        // ========== Loader: search the bins, light a random one at 100% ==========
         (function(){
             const root = document.documentElement;
             const curtain = document.getElementById('curtain');
             const pctEl = document.getElementById('curtain-pct');
+            const tagEl = document.getElementById('curtain-tag');
+            const grid = document.getElementById('loader-grid');
             const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             let revealed = false;
             function reveal(){
@@ -1632,19 +1665,43 @@
                 if (curtain){ curtain.classList.add('done'); setTimeout(() => { if (curtain) curtain.remove(); }, 900); }
             }
             if (reduce){ root.classList.remove('loading'); if (curtain) curtain.remove(); return; }
-            let loaded = false, start = null, shown = 0;
+            // build a grid of bins
+            const N = 15, boxes = [];
+            if (grid){
+                const svg = '<svg viewBox="0 0 48 44"><path class="lb-top" d="M24 6 L42 16 L24 26 L6 16 Z"/><path class="lb-left" d="M6 16 L24 26 L24 40 L6 30 Z"/><path class="lb-right" d="M24 26 L42 16 L42 30 L24 40 Z"/><circle class="lb-led" cx="33" cy="23.5" r="2.6"/></svg>';
+                for (let i = 0; i < N; i++){ const d = document.createElement('div'); d.className = 'lbox'; d.innerHTML = svg; grid.appendChild(d); boxes.push(d); }
+            }
+            const targetIdx = Math.floor(Math.random() * Math.max(1, boxes.length));
+            let loaded = false, start = null, shown = 0, scanIdx = -1, done = false;
             window.addEventListener('load', () => { loaded = true; });
             function tick(now){
                 if (start == null) start = now;
-                let target = Math.min(100, Math.floor((now - start) / 1500 * 100));
-                if (!loaded) target = Math.min(target, 92);             // hold near the end until fully loaded
-                if (target > shown) shown = target;
+                let t = Math.min(100, Math.floor((now - start) / 1700 * 100));
+                if (!loaded) t = Math.min(t, 92);                       // hold near the end until fully loaded
+                if (t > shown) shown = t;
                 if (pctEl) pctEl.textContent = shown;
-                if (shown >= 100){ setTimeout(reveal, 250); return; }
-                requestAnimationFrame(tick);
+                if (shown < 100){
+                    if (boxes.length){                                 // deliberate reading-order sweep = a real scan
+                        const idx = Math.min(boxes.length - 1, Math.floor(shown / 100 * boxes.length));
+                        if (idx !== scanIdx){
+                            if (scanIdx >= 0 && boxes[scanIdx]) boxes[scanIdx].classList.remove('scan');
+                            scanIdx = idx;
+                            boxes[scanIdx].classList.add('scan');      // CSS transition leaves a fading trail
+                        }
+                    }
+                    requestAnimationFrame(tick);
+                    return;
+                }
+                if (!done){                                            // 100% -> lock onto the random bin
+                    done = true;
+                    boxes.forEach(b => { b.classList.remove('scan'); b.classList.add('dim'); });   // spotlight
+                    if (boxes.length){ boxes[targetIdx].classList.remove('dim'); boxes[targetIdx].classList.add('lit'); }
+                    if (tagEl){ tagEl.removeAttribute('data-i18n'); tagEl.textContent = (typeof lang !== 'undefined' && lang === 'en') ? 'Found · Entering' : '已找到 · 进入'; }
+                    setTimeout(reveal, 800);
+                }
             }
             requestAnimationFrame(tick);
-            setTimeout(reveal, 4200);                                   // safety: never leave the hero paused
+            setTimeout(reveal, 4800);                                   // safety: never leave the hero paused
         })();
 
         // ========== Inertia smooth-scroll + scroll parallax + unbox scene ==========
