@@ -351,7 +351,7 @@
             background: var(--card-bg); border: 1px solid var(--surface-border);
             border-radius: 18px; padding: 18px; box-shadow: var(--shadow-sm);
             backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-            text-align: left; max-height: 260px; overflow: hidden;
+            text-align: left;
             transition: border-color .3s, box-shadow .3s;
         }
         .hero-visual.loc:hover .loc-card { border-color: rgba(97,196,227,0.35); box-shadow: var(--glow); }
@@ -380,8 +380,8 @@
         .hero-visual .lbox.lit::before { animation: locPing 1s ease-out .18s; }
         @keyframes locPing { 0% { transform: scale(.6); opacity: .8; } 100% { transform: scale(1.35); opacity: 0; } }
         @media (max-width: 768px) { .hero-visual.loc { max-width: min(320px, 90vw); } }
-        @media (max-height: 820px) { .loc-card { max-height: 220px; padding: 14px; } .loc-grid { gap: 7px; } .loc-name { font-size: 16px; } }
-        @media (max-height: 700px) { .hero-visual.loc { display: none; } }
+        @media (max-height: 820px) { .loc-card { padding: 14px; } .loc-grid { gap: 8px; margin-bottom: 10px; } .loc-name { font-size: 16px; margin-bottom: 10px; } }
+        @media (max-height: 640px) { .hero-visual.loc { display: none; } }
         @media (prefers-reduced-motion: reduce) { .loc-wave i, .loc-dot { animation: none !important; } .hero-visual .lbox.lit::after, .hero-visual .lbox.lit::before { animation: none !important; } }
 
         /* ===== Cinematic loader (counts to 100%, fades into the experience) ===== */
@@ -1967,7 +1967,7 @@
                 { zh: '公制铜套', en: 'Bronze Bushing', box: 'FINDIT-022' }
             ];
             const BIN_SVG = '<svg viewBox="0 0 48 44"><path class="lb-top" d="M24 6 L42 16 L24 26 L6 16 Z"/><path class="lb-left" d="M6 16 L24 26 L24 40 L6 30 Z"/><path class="lb-right" d="M24 26 L42 16 L42 30 L24 40 Z"/><circle class="lb-led" cx="33" cy="23.5" r="2.6"/></svg>';
-            const N = 12, MAX_CYCLES = 3;
+            const N = 8, MAX_CYCLES = 3;
             const bins = [];
             if (grid){ for (let i = 0; i < N; i++){ const d = document.createElement('div'); d.className = 'lbox'; d.innerHTML = BIN_SVG; grid.appendChild(d); bins.push(d); } }
 
