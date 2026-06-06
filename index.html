@@ -113,7 +113,7 @@
             --grid-dot: rgba(10,112,153,.12);
             --text: #1d1d1f;
             --text-dim: #6e6e73;
-            --text-dimmer: #86868b;
+            --text-dimmer: #6b6b70;
             --section-title: #1d1d1f;
             --surface: rgba(0, 0, 0, 0.03);
             --surface-border: rgba(0, 0, 0, 0.1);
@@ -129,7 +129,7 @@
             --feature-bg: #fff;
             --feature-hover-bg: var(--surface);
             --footer-bg: #f5f5f7;
-            --footer-text: rgba(0, 0, 0, 0.4);
+            --footer-text: rgba(0, 0, 0, 0.55);
             --footer-text-hover: rgba(0, 0, 0, 0.8);
             --footer-dot: rgba(0, 0, 0, 0.15);
             --input-bg: rgba(0, 0, 0, 0.03);
@@ -180,6 +180,31 @@
         .nav-icon-btn:hover { border-color: var(--surface-hover); color: var(--text); }
         .nav-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         @media (max-width: 768px) { .nav-links { display: none; } .nav-icon-btn { width: 44px; height: 44px; } }
+
+        /* Mobile nav: a real menu drawer, not a hidden desktop bar */
+        .nav-toggle { display: none; }
+        .nav-toggle svg { width: 18px; height: 18px; }
+        @media (max-width: 768px) { .nav-toggle { display: flex; } }
+        @media (min-width: 769px) { .mobile-menu { display: none; } }
+        .mobile-menu {
+            position: fixed; inset: 0; z-index: 95;
+            background: var(--nav-bg); backdrop-filter: saturate(180%) blur(22px); -webkit-backdrop-filter: saturate(180%) blur(22px);
+            display: flex; flex-direction: column; justify-content: center; gap: 2px;
+            padding: 64px 28px 32px;
+            opacity: 0; visibility: hidden; transform: translateY(-6px);
+            transition: opacity .3s ease, transform .3s ease, visibility .3s;
+        }
+        .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mobile-menu a {
+            font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.01em;
+            color: var(--text); text-decoration: none; padding: 18px 6px;
+            border-bottom: 1px solid var(--surface-border); transition: color .2s;
+        }
+        .mobile-menu a:active { color: var(--accent-ink); }
+        .mobile-menu a.mm-cta {
+            margin-top: 24px; border-bottom: none; text-align: center;
+            background: var(--accent); color: var(--accent-on); border-radius: 980px; padding: 16px;
+        }
         /* Skip-to-content link for keyboard users */
         .skip-link { position: fixed; top: 10px; left: 10px; z-index: 10000; background: var(--accent); color: var(--accent-on);
             padding: 9px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none;
@@ -442,6 +467,7 @@
             #curtain { display: none; }
             .wave-split .ws-inner { transform: none; transition: none; }
             .lbox.lit, .lbox.lit::after, .lbox.lit::before { animation: none !important; }
+            .reveal { transform: none !important; opacity: 1 !important; transition: none !important; }
         }
 
         /* ===== Unbox scroll scene (scroll-scrubbed: trigger → open → stats rise) ===== */
@@ -470,7 +496,7 @@
 
         /* Reveal */
         .reveal {
-            transform: translateY(60px);
+            transform: translateY(16px);
             transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s, background 0.4s;
         }
         .reveal:not(.visible) { opacity: 0.12; }
@@ -833,6 +859,10 @@
                     <li><a href="#roadmap" data-i18n="nav_roadmap">路线图</a></li>
                     <li><a href="#demo" class="nav-cta" data-i18n="nav_cta">开始使用</a></li>
                 </ul>
+                <button class="nav-icon-btn nav-toggle" id="nav-toggle" aria-label="菜单 / Menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="ico-ham" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    <svg class="ico-close" viewBox="0 0 24 24" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
                 <button class="nav-icon-btn" onclick="toggleLang()" id="lang-btn" title="Switch Language" aria-label="Switch language / 切换语言">EN</button>
                 <button class="nav-icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle Theme" aria-label="Toggle light / dark theme / 切换深浅主题">
                     <svg id="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -841,6 +871,17 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile menu — a designed drawer, not a hidden desktop bar -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#how" data-i18n="nav_how">原理</a>
+        <a href="#features" data-i18n="nav_features">功能</a>
+        <a href="#demo" data-i18n="nav_demo">演示</a>
+        <a href="#roadmap" data-i18n="nav_roadmap">路线图</a>
+        <a href="#demo" class="mm-cta" data-i18n="nav_cta">开始使用</a>
+    </div>
+
+    <main>
 
     <!-- Hero -->
     <section class="hero section-bg hero-bg" id="main" tabindex="-1" style="outline:none">
@@ -945,7 +986,7 @@
     <section class="how section-bg how-bg" id="how">
         <div class="container">
             <div class="section-eyebrow reveal" data-i18n="how_eyebrow">原理</div>
-            <div class="section-title reveal reveal-delay-1 wave-split" data-i18n="how_title">三步找到零件</div>
+            <h2 class="section-title reveal reveal-delay-1 wave-split" data-i18n="how_title">三步找到零件</h2>
             <div class="steps">
                 <div class="step reveal reveal-delay-1" onclick="openStep(1)" style="cursor:pointer">
                     <div class="step-num">01</div>
@@ -973,7 +1014,7 @@
     <section class="features section-bg features-bg" id="features">
         <div class="container">
             <div class="section-eyebrow reveal" data-i18n="feat_eyebrow">功能</div>
-            <div class="section-title reveal reveal-delay-1 wave-split" data-i18n="feat_title">为机器人社打造</div>
+            <h2 class="section-title reveal reveal-delay-1 wave-split" data-i18n="feat_title">为机器人社打造</h2>
             <div class="feature-grid reveal reveal-delay-2">
                 <div class="feature" onclick="openFeature(1)" style="cursor:pointer">
                     <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
@@ -1008,7 +1049,7 @@
     <section class="demo section-bg demo-bg" id="demo">
         <div class="container">
             <div class="section-eyebrow reveal" data-i18n="demo_eyebrow">操控演示</div>
-            <div class="section-title reveal reveal-delay-1 wave-split" data-i18n="demo_title">完整操控流程</div>
+            <h2 class="section-title reveal reveal-delay-1 wave-split" data-i18n="demo_title">完整操控流程</h2>
 
             <!-- Flow Steps -->
             <div class="flow-steps reveal reveal-delay-1" id="flow-steps">
@@ -1072,7 +1113,7 @@
                         <p data-i18n="demo_search_desc">输入零件名称、型号或类别，实时匹配</p>
                         <div class="demo-input-wrap">
                             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            <input type="text" class="demo-input" id="demo-input" data-i18n-placeholder="demo_placeholder" placeholder="M3 螺丝、轴承、齿轮..." oninput="demoSearch()">
+                            <input type="text" class="demo-input" id="demo-input" aria-label="搜索零件 Search parts" data-i18n-placeholder="demo_placeholder" placeholder="M3 螺丝、轴承、齿轮..." oninput="demoSearch()">
                         </div>
                         <div class="demo-results" id="demo-results"></div>
                     </div>
@@ -1138,7 +1179,7 @@
     <section class="roadmap section-bg roadmap-bg" id="roadmap">
         <div class="container">
             <div class="section-eyebrow reveal" data-i18n="road_eyebrow">路线图</div>
-            <div class="section-title reveal reveal-delay-1 wave-split" data-i18n="road_title">一步一步来</div>
+            <h2 class="section-title reveal reveal-delay-1 wave-split" data-i18n="road_title">一步一步来</h2>
             <div class="timeline reveal reveal-delay-2">
                 <div class="tl-item">
                     <div class="tl-phase">Phase 1 · <span data-i18n="road1_when">第 1-2 周</span></div>
@@ -1163,6 +1204,8 @@
             </div>
         </div>
     </section>
+
+    </main>
 
     <!-- Footer -->
     <footer>
@@ -1358,12 +1401,11 @@
         }
 
         // ========== Scroll Reveal ==========
-        const revealObserver = new IntersectionObserver(entries => {
+        const revealObserver = new IntersectionObserver((entries, obs) => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
                     e.target.classList.add('visible');
-                } else {
-                    e.target.classList.remove('visible');
+                    obs.unobserve(e.target);   // reveal once, then stop — no opacity:0.12 replay on scroll-out
                 }
             });
         }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
@@ -1762,7 +1804,7 @@
             window.addEventListener('load', () => { loaded = true; });
             function tick(now){
                 if (start == null) start = now;
-                let t = Math.min(100, Math.floor((now - start) / 1700 * 100));
+                let t = Math.min(100, Math.floor((now - start) / 700 * 100));
                 if (!loaded) t = Math.min(t, 92);                       // hold near the end until fully loaded
                 if (t > shown) shown = t;
                 if (pctEl) pctEl.textContent = shown;
@@ -1783,11 +1825,11 @@
                     boxes.forEach(b => { b.classList.remove('scan'); b.classList.add('dim'); });   // spotlight
                     if (boxes.length){ boxes[targetIdx].classList.remove('dim'); boxes[targetIdx].classList.add('lit'); }
                     if (tagEl){ tagEl.removeAttribute('data-i18n'); tagEl.textContent = (typeof lang !== 'undefined' && lang === 'en') ? 'Found · Entering' : '已找到 · 进入'; }
-                    setTimeout(reveal, 800);
+                    setTimeout(reveal, 250);
                 }
             }
             requestAnimationFrame(tick);
-            setTimeout(reveal, 4800);                                   // safety: never leave the hero paused
+            setTimeout(reveal, 2200);                                   // safety: never leave the hero paused
         })();
 
         // ========== Inertia smooth-scroll + scroll parallax + unbox scene ==========
@@ -2104,12 +2146,33 @@
             kick();
         })();
 
+        // ========== Mobile menu drawer ==========
+        (function(){
+            const toggle = document.getElementById('nav-toggle');
+            const menu = document.getElementById('mobile-menu');
+            if (!toggle || !menu) return;
+            const ham = toggle.querySelector('.ico-ham');
+            const closeIco = toggle.querySelector('.ico-close');
+            function setOpen(open){
+                menu.classList.toggle('open', open);
+                menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (ham) ham.style.display = open ? 'none' : 'block';
+                if (closeIco) closeIco.style.display = open ? 'block' : 'none';
+            }
+            toggle.addEventListener('click', () => setOpen(!menu.classList.contains('open')));
+            menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('open')) setOpen(false); });
+            const wide = matchMedia('(min-width: 769px)');
+            if (wide.addEventListener) wide.addEventListener('change', e => { if (e.matches) setOpen(false); });
+        })();
+
         // ========== End ==========
     </script>
     <!-- Feature Modal -->
-    <div id="feature-modal" onclick="if(event.target===this)closeFeature()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);justify-content:center;align-items:center;padding:24px">
+    <div id="feature-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this)closeFeature()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);justify-content:center;align-items:center;padding:24px">
         <div id="modal-content" style="background:var(--bg-elev);border:1px solid var(--surface-border);border-radius:24px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;padding:48px 40px;position:relative;transform:translateY(20px);opacity:0;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1),opacity 0.4s;box-shadow:var(--shadow-md)">
-            <button onclick="closeFeature()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:24px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='none'">✕</button>
+            <button onclick="closeFeature()" aria-label="关闭 / Close" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:24px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='none'">✕</button>
             <div id="modal-icon" style="width:56px;height:56px;border-radius:14px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin-bottom:24px"></div>
             <h2 id="modal-title" style="font-size:28px;font-weight:600;letter-spacing:-0.03em;margin-bottom:12px;color:var(--text)"></h2>
             <p id="modal-subtitle" style="font-size:16px;color:var(--text-dim);line-height:1.6;margin-bottom:32px"></p>

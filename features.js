@@ -317,6 +317,7 @@ function openFeature(id) {
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    onModalOpen();
 
     // Animate in
     requestAnimationFrame(() => {
@@ -335,12 +336,35 @@ function closeFeature() {
     setTimeout(() => {
         modal.style.display = 'none';
         document.body.style.overflow = '';
+        if (lastModalFocus) { try { lastModalFocus.focus(); } catch (err) {} lastModalFocus = null; }
     }, 300);
 }
 
-// Close on Escape key
+// ===== Modal a11y: dialog focus management, focus trap, Escape =====
+let lastModalFocus = null;
+function onModalOpen() {
+    const modal = document.getElementById('feature-modal');
+    lastModalFocus = document.activeElement;
+    requestAnimationFrame(() => {
+        const closeBtn = modal.querySelector('button');
+        if (closeBtn) closeBtn.focus();
+    });
+}
+function modalIsOpen() {
+    const modal = document.getElementById('feature-modal');
+    return !!modal && modal.style.display === 'flex';
+}
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeFeature();
+    if (!modalIsOpen()) return;
+    if (e.key === 'Escape') { closeFeature(); return; }
+    if (e.key === 'Tab') {
+        const modal = document.getElementById('feature-modal');
+        const f = modal.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])');
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
 });
 
 // ===== How-It-Works step details (opened from the 三步找到零件 / Three Steps section) =====
@@ -471,6 +495,7 @@ function openStep(id) {
     const content = document.getElementById('modal-content');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    onModalOpen();
     requestAnimationFrame(() => {
         content.style.transform = 'translateY(0)';
         content.style.opacity = '1';
