@@ -10,19 +10,19 @@ const featureDetails = {
                 <p style="margin-bottom:24px">系统采用模糊匹配算法，支持按零件名称、型号、类别进行搜索。不需要记住精确的零件编号，输入部分关键词即可实时匹配。</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">🔤 名称搜索</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> 名称搜索</div>
                         <div style="font-size:13px;color:var(--text-dim)">输入"M3 螺丝"即可匹配所有 M3 系列螺丝</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">🔢 型号搜索</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg> 型号搜索</div>
                         <div style="font-size:13px;color:var(--text-dim)">输入型号如"WS2812B"精确匹配零件</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">📂 类别搜索</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 类别搜索</div>
                         <div style="font-size:13px;color:var(--text-dim)">按分类浏览：螺丝、轴承、电控、传感器等</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">⚡ 实时匹配</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 实时匹配</div>
                         <div style="font-size:13px;color:var(--text-dim)">输入即时显示结果，无需等待</div>
                     </div>
                 </div>
@@ -76,15 +76,15 @@ const featureDetails = {
                 <p style="margin-bottom:24px">系统可选接入飞书 OAuth 2.0 进行身份验证，限定允许使用的用户范围（自托管时由你自行配置）</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
                         <div><div style="font-weight:600;margin-bottom:4px">扫码登录</div><div style="font-size:13px;color:var(--text-dim)">用飞书扫描网页上的二维码，一键完成身份验证</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
                         <div><div style="font-weight:600;margin-bottom:4px">权限校验</div><div style="font-size:13px;color:var(--text-dim)">系统自动验证用户是否属于你配置的允许群组</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
                         <div><div style="font-weight:600;margin-bottom:4px">角色分配</div><div style="font-size:13px;color:var(--text-dim)">管理员和普通用户拥有不同的操作权限</div></div>
                     </div>
                 </div>
@@ -120,19 +120,19 @@ const featureDetails = {
                 <p style="margin-bottom:24px">管理员通过 Web 后台管理所有零件信息，支持完整的 CRUD 操作</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">📝</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
                         <div><div style="font-weight:600">添加零件</div><div style="font-size:13px;color:var(--text-dim)">录入零件名称、型号、类别，指定存放箱子</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">✏️</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
                         <div><div style="font-weight:600">编辑信息</div><div style="font-size:13px;color:var(--text-dim)">修改零件信息或调整存放位置</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">🗑️</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></div>
                         <div><div style="font-weight:600">删除零件</div><div style="font-size:13px;color:var(--text-dim)">移除已用完或不再需要的零件记录</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">📦</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M16.5 9.4 7.5 4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
                         <div><div style="font-weight:600">箱子管理</div><div style="font-size:13px;color:var(--text-dim)">每个箱子最多 3 种零件，清晰明了，避免混乱</div></div>
                     </div>
                 </div>
@@ -160,19 +160,19 @@ const featureDetails = {
                 <p style="margin-bottom:24px">The system uses fuzzy matching to find parts by name, model number, or category. No need to remember exact part numbers — just type a partial keyword and get instant results</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">🔤 Name Search</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> Name Search</div>
                         <div style="font-size:13px;color:var(--text-dim)">Type "M3 screw" to match all M3 series</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">🔢 Model Search</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg> Model Search</div>
                         <div style="font-size:13px;color:var(--text-dim)">Enter model numbers like "WS2812B" for exact matches</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">📂 Category Browse</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Category Browse</div>
                         <div style="font-size:13px;color:var(--text-dim)">Browse by type: screws, bearings, electronics, sensors</div>
                     </div>
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
-                        <div style="font-weight:600;margin-bottom:6px">⚡ Instant Results</div>
+                        <div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Instant Results</div>
                         <div style="font-size:13px;color:var(--text-dim)">Results appear as you type, zero wait time</div>
                     </div>
                 </div>
@@ -226,15 +226,15 @@ const featureDetails = {
                 <p style="margin-bottom:24px">The system can optionally authenticate via Feishu OAuth 2.0, restricting access to the user group you configure (you set this up when self-hosting)</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">1</div>
                         <div><div style="font-weight:600;margin-bottom:4px">QR Code Login</div><div style="font-size:13px;color:var(--text-dim)">Scan the QR code on the webpage with Feishu for one-tap authentication</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">2</div>
                         <div><div style="font-weight:600;margin-bottom:4px">Access Control</div><div style="font-size:13px;color:var(--text-dim)">System verifies membership in the group you configure</div></div>
                     </div>
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
+                        <div style="min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-on);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">3</div>
                         <div><div style="font-weight:600;margin-bottom:4px">Role Assignment</div><div style="font-size:13px;color:var(--text-dim)">Admins and regular members get different permission levels</div></div>
                     </div>
                 </div>
@@ -270,19 +270,19 @@ const featureDetails = {
                 <p style="margin-bottom:24px">Admins manage all parts through a web dashboard with full CRUD operations</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">📝</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
                         <div><div style="font-weight:600">Add Parts</div><div style="font-size:13px;color:var(--text-dim)">Enter part name, model, category, and assign a storage box</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">✏️</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
                         <div><div style="font-weight:600">Edit Info</div><div style="font-size:13px;color:var(--text-dim)">Update part details or change storage location</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">🗑️</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></div>
                         <div><div style="font-weight:600">Remove Parts</div><div style="font-size:13px;color:var(--text-dim)">Delete used or obsolete part records</div></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
-                        <div style="font-size:24px">📦</div>
+                        <div style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M16.5 9.4 7.5 4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
                         <div><div style="font-weight:600">Box Management</div><div style="font-size:13px;color:var(--text-dim)">Max 3 part types per box — clean and organized</div></div>
                     </div>
                 </div>
@@ -356,10 +356,10 @@ const stepDetails = {
                 <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">怎么搜索</h3>
                 <p style="margin-bottom:24px">采用模糊匹配，不用记住精确编号——输入「M3 螺丝」「轴承」「齿轮」等关键词，结果实时显示。</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔤 名称搜索</div><div style="font-size:13px;color:var(--text-dim)">输入名称即可匹配同系列零件</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔢 型号搜索</div><div style="font-size:13px;color:var(--text-dim)">按精确型号快速定位</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">📂 类别浏览</div><div style="font-size:13px;color:var(--text-dim)">按螺丝 / 轴承 / 电控等分类查找</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">⚡ 实时匹配</div><div style="font-size:13px;color:var(--text-dim)">边输入边出结果，无需等待</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> 名称搜索</div><div style="font-size:13px;color:var(--text-dim)">输入名称即可匹配同系列零件</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg> 型号搜索</div><div style="font-size:13px;color:var(--text-dim)">按精确型号快速定位</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 类别浏览</div><div style="font-size:13px;color:var(--text-dim)">按螺丝 / 轴承 / 电控等分类查找</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 实时匹配</div><div style="font-size:13px;color:var(--text-dim)">边输入边出结果，无需等待</div></div>
                 </div>
             `
         },
@@ -411,10 +411,10 @@ const stepDetails = {
                 <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">How to search</h3>
                 <p style="margin-bottom:24px">Fuzzy matching means you don't need exact part numbers — type "M3 screw", "bearing", "gear" and results appear instantly.</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔤 By Name</div><div style="font-size:13px;color:var(--text-dim)">Match a whole series by name</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">🔢 By Model</div><div style="font-size:13px;color:var(--text-dim)">Pinpoint an exact model number</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">📂 By Category</div><div style="font-size:13px;color:var(--text-dim)">Browse screws / bearings / electronics</div></div>
-                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px">⚡ Instant</div><div style="font-size:13px;color:var(--text-dim)">Results as you type, zero wait</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> By Name</div><div style="font-size:13px;color:var(--text-dim)">Match a whole series by name</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg> By Model</div><div style="font-size:13px;color:var(--text-dim)">Pinpoint an exact model number</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> By Category</div><div style="font-size:13px;color:var(--text-dim)">Browse screws / bearings / electronics</div></div>
+                    <div style="background:var(--surface);border-radius:12px;padding:18px"><div style="font-weight:600;margin-bottom:6px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Instant</div><div style="font-size:13px;color:var(--text-dim)">Results as you type, zero wait</div></div>
                 </div>
             `
         },
