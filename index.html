@@ -24,7 +24,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Crect%20width='24'%20height='24'%20rx='5'%20fill='%230A0C0F'/%3E%3Cg%20fill='none'%20stroke='%2361C4E3'%20stroke-width='2.2'%20stroke-linecap='round'%3E%3Ccircle%20cx='10.5'%20cy='10.5'%20r='5'/%3E%3Cline%20x1='14.5'%20y1='14.5'%20x2='19'%20y2='19'/%3E%3C/g%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: auto; scroll-padding-top: 52px; }  /* snap removed: inertia smooth-scroll handles motion */
@@ -54,8 +54,13 @@
             --accent-dim: rgba(97, 196, 227, 0.12);
             --accent-on: #05222C;            /* dark ink for text sitting on bright-cyan fills */
             --accent-hero: #61C4E3;          /* hero headline highlight — bright cyan (dark theme) */
+            --accent-2: #3E96E6;             /* electric-blue 2nd accent — hue≈206°, glow/surface only, NEVER text */
+            --accent-grad: linear-gradient(115deg, #61C4E3 0%, #61C4E3 38%, #3E96E6 100%);
+            --glow: 0 6px 22px rgba(97,196,227,.30), 0 10px 40px rgba(62,150,230,.16);
+            --grid-dot: rgba(97,196,227,.07);
             --font-display: 'Sora', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
             --font-body: 'IBM Plex Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+            --font-mono: 'IBM Plex Mono', 'Noto Sans SC', ui-monospace, SFMono-Regular, Menlo, monospace;
             --text: #f5f5f7;
             --text-dim: #a1a1a6;
             --text-dimmer: #86868b;
@@ -102,6 +107,10 @@
             --accent-dim: rgba(97, 196, 227, 0.08);
             --accent-on: #06303d;            /* dark ink on bright-cyan fills (~7.5:1 on #61C4E3) */
             --accent-hero: #1593C0;          /* hero headline highlight — brighter cyan, ~3:1 on light (large text) */
+            --accent-2: #2E7FCB;             /* light: deeper electric-blue, glow only — NEVER text */
+            --accent-grad: linear-gradient(115deg, #61C4E3 0%, #61C4E3 40%, #3E96E6 100%);
+            --glow: 0 6px 18px rgba(21,147,192,.20);
+            --grid-dot: rgba(10,112,153,.12);
             --text: #1d1d1f;
             --text-dim: #6e6e73;
             --text-dimmer: #86868b;
@@ -162,6 +171,7 @@
         .nav-links a { font-size: 14px; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
         .nav-links a:hover { color: var(--text); }
         .nav-cta { background: var(--accent) !important; color: var(--accent-on) !important; padding: 7px 18px; border-radius: 980px; font-weight: 600; }
+        .nav-cta:hover { box-shadow: var(--glow); }
         .nav-icon-btn {
             background: none; border: 1px solid var(--surface-border); color: var(--text-dim);
             width: 40px; height: 40px; border-radius: 980px; display: flex; align-items: center; justify-content: center;
@@ -273,7 +283,10 @@
             top: 50%; left: 50%; transform: translate(-50%, -60%); pointer-events: none;
             z-index: 1;
         }
+        /* Hero dot-matrix canvas — (0,2,1) specificity locks position:absolute over `.section-bg > *{position:relative}` */
+        .hero.section-bg .hero-grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         .hero-label {
+            font-family: var(--font-mono);
             font-size: 13px; font-weight: 600; color: var(--accent-ink);
             text-transform: uppercase; letter-spacing: 0.1em;
             margin-bottom: 20px; position: relative; z-index: 2;
@@ -306,7 +319,7 @@
             font-weight: 500; text-decoration: none; transition: all 0.3s; border: none; cursor: pointer;
         }
         .btn-fill { background: var(--accent); color: var(--accent-on); }
-        .btn-fill:hover { background: #4db8d9; transform: scale(1.02); box-shadow: 0 4px 24px rgba(97,196,227,0.3); }
+        .btn-fill:hover { background: #4db8d9; --btn-s: 1.02; box-shadow: var(--glow); }
         .btn-ghost { background: transparent; color: var(--accent-ink); }
         .btn-ghost:hover { background: var(--accent-dim); }
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
@@ -330,6 +343,46 @@
             .fi-signal { opacity: 0.55; }
         }
         @media (max-width: 768px) { .hero-visual { max-width: 250px; margin-top: 36px; } }
+
+        /* ===== Live Locator (hero mini dashboard) — reuses loader .lbox bins ===== */
+        .hero-visual.loc { max-width: min(340px, 90vw); margin: clamp(24px, 4vh, 52px) auto 0; cursor: pointer; }
+        .hero-visual .lbox:not(.lit) svg { filter: none; }   /* kill inherited .hero-visual svg drop-shadow on the 12 mini-bins; lit keeps its own glow */
+        .loc-card {
+            background: var(--card-bg); border: 1px solid var(--surface-border);
+            border-radius: 18px; padding: 18px; box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            text-align: left; max-height: 260px; overflow: hidden;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .hero-visual.loc:hover .loc-card { border-color: rgba(97,196,227,0.35); box-shadow: var(--glow); }
+        .loc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+        .loc-status { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); }
+        .loc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: locDot 1.6s ease-in-out infinite; }
+        @keyframes locDot { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+        .loc-box { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+        .loc-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 14px; min-height: 23px; }
+        .loc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 6px; margin-bottom: 14px; }
+        .loc-foot { display: flex; align-items: center; gap: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dimmer); letter-spacing: .04em; }
+        .loc-meta { font-variant-numeric: tabular-nums; }
+        .loc-beepwrap { display: inline-flex; align-items: center; gap: 6px; opacity: 0; transition: opacity .3s; }
+        .loc-beepwrap.on { opacity: 1; }
+        .loc-beep { color: var(--accent-ink); }
+        .loc-wave { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+        .loc-wave i { width: 2.5px; background: var(--accent); border-radius: 2px; animation: locWave .5s ease-in-out infinite alternate; }
+        .loc-wave i:nth-child(1) { height: 5px; animation-delay: 0s; }
+        .loc-wave i:nth-child(2) { height: 10px; animation-delay: .08s; }
+        .loc-wave i:nth-child(3) { height: 12px; animation-delay: .14s; }
+        .loc-wave i:nth-child(4) { height: 8px; animation-delay: .2s; }
+        .loc-wave i:nth-child(5) { height: 5px; animation-delay: .26s; }
+        @keyframes locWave { from { transform: scaleY(.4); } to { transform: scaleY(1); } }
+        /* tighter ping in the compact 4×3 grid so the ring doesn't clip / invade neighbors */
+        .hero-visual .lbox.lit::after { animation: locPing 1s ease-out; }
+        .hero-visual .lbox.lit::before { animation: locPing 1s ease-out .18s; }
+        @keyframes locPing { 0% { transform: scale(.6); opacity: .8; } 100% { transform: scale(1.35); opacity: 0; } }
+        @media (max-width: 768px) { .hero-visual.loc { max-width: min(320px, 90vw); } }
+        @media (max-height: 820px) { .loc-card { max-height: 220px; padding: 14px; } .loc-grid { gap: 7px; } .loc-name { font-size: 16px; } }
+        @media (max-height: 700px) { .hero-visual.loc { display: none; } }
+        @media (prefers-reduced-motion: reduce) { .loc-wave i, .loc-dot { animation: none !important; } .hero-visual .lbox.lit::after, .hero-visual .lbox.lit::before { animation: none !important; } }
 
         /* ===== Cinematic loader (counts to 100%, fades into the experience) ===== */
         #curtain {
@@ -388,6 +441,7 @@
         @media (prefers-reduced-motion: reduce) {
             #curtain { display: none; }
             .wave-split .ws-inner { transform: none; transition: none; }
+            .lbox.lit, .lbox.lit::after, .lbox.lit::before { animation: none !important; }
         }
 
         /* ===== Unbox scroll scene (scroll-scrubbed: trigger → open → stats rise) ===== */
@@ -441,6 +495,7 @@
         /* How */
         .how { padding: 150px 24px; }
         .section-eyebrow { font-size: 16px; font-weight: 600; color: var(--accent-ink); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .section-eyebrow::before { content: '// '; font-family: var(--font-mono); color: var(--text-dimmer); letter-spacing: .2em; }
         .section-bg .section-title { color: var(--section-title); text-shadow: var(--text-shadow); }
         .section-bg .section-eyebrow { text-shadow: var(--text-shadow); }
         .section-title { font-size: clamp(32px, 5vw, 54px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 64px; max-width: 600px; color: var(--section-title); }
@@ -450,7 +505,7 @@
             border: 1px solid var(--surface-border); border-radius: 20px; box-shadow: var(--shadow-sm);
             transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background 0.3s;
         }
-        .step:hover { transform: translateY(-4px); border-color: var(--surface-hover); box-shadow: var(--shadow-md); }
+        .step:hover { transform: translateY(-4px); border-color: rgba(97,196,227,0.35); box-shadow: var(--shadow-md); }
         .step-num { font-size: 60px; font-weight: 600; color: var(--accent-ink); opacity: 0.55; line-height: 1; margin-bottom: 24px; letter-spacing: -0.02em; }
         .step h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: var(--text); }
         .step p { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
@@ -653,6 +708,7 @@
             background: var(--surface); border-radius: 12px; padding: 16px; text-align: center;
         }
         .confirm-stat-value { font-size: 24px; font-weight: 700; color: var(--accent-ink); }
+        #confirm-box { font-family: var(--font-mono); font-weight: 600; letter-spacing: .04em; }
         .confirm-stat-label { font-size: 12px; color: var(--text-dimmer); margin-top: 4px; }
 
         /* Action buttons */
@@ -662,7 +718,7 @@
             font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
         .demo-action-btn.primary { background: var(--accent); color: var(--accent-on); }
-        .demo-action-btn.primary:hover { background: #4db8d9; transform: scale(1.02); box-shadow: 0 4px 24px rgba(97,196,227,0.3); }
+        .demo-action-btn.primary:hover { background: #4db8d9; --btn-s: 1.02; box-shadow: var(--glow); }
         .demo-action-btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--surface-border); }
         .demo-action-btn.secondary:hover { border-color: var(--surface-hover); }
         .demo-action-btn.success { background: #30d158; color: #fff; }
@@ -731,11 +787,21 @@
         a:focus-visible, button:focus-visible,
         .step:focus-visible, .feature:focus-visible, .entry-card:focus-visible,
         .flow-step:focus-visible, .demo-item:focus-visible, .nav-icon-btn:focus-visible {
-            outline: 2px solid var(--accent);
+            outline: 2px solid var(--accent-ink);
             outline-offset: 3px;
             border-radius: 10px;
         }
         .demo-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        /* ===== Magnetic buttons + faint companion ring (desktop fine-pointer; native cursor kept) ===== */
+        .btn, .nav-cta, .demo-action-btn { transform: translate(var(--mx, 0), var(--my, 0)) scale(var(--btn-s, 1)); }
+        .cursor-ring {
+            position: fixed; left: 0; top: 0; width: 28px; height: 28px; margin: -14px 0 0 -14px;
+            border-radius: 50%; border: 1.5px solid var(--accent-ink); opacity: .35;
+            pointer-events: none; z-index: 10001; will-change: transform;
+            transition: opacity .2s, border-color .2s;
+        }
+        .cursor-ring.hot { border-color: var(--accent); opacity: .5; }
     </style>
     <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);document.documentElement.classList.add('loading');})()</script>
 </head>
@@ -778,6 +844,7 @@
 
     <!-- Hero -->
     <section class="hero section-bg hero-bg" id="main" tabindex="-1" style="outline:none">
+        <canvas class="hero-grid" aria-hidden="true"></canvas>
         <div class="hero-glow"></div>
         <div class="hero-label" data-i18n="hero_label">开源零件定位系统 · ESP32 + FastAPI + MQTT</div>
         <h1 data-i18n="hero_h1" data-i18n-html><span class="it">30 秒</span><br>找到你要的<span class="it">零件</span></h1>
@@ -786,6 +853,21 @@
             <a href="#demo" class="btn btn-fill" data-i18n="hero_cta1">试试看 →</a>
             <a href="#how" class="btn btn-ghost" data-i18n="hero_cta2">了解原理</a>
             <a href="https://github.com/HarryXin0919/FindItem" target="_blank" rel="noopener" class="btn btn-ghost"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span data-i18n="hero_cta3">查看源码</span></a>
+        </div>
+        <div class="hero-visual loc" aria-hidden="true">
+            <div class="loc-card">
+                <div class="loc-head">
+                    <span class="loc-status"><span class="loc-dot"></span><span id="loc-state">定位中…</span></span>
+                    <span class="loc-box" id="loc-box">FINDIT-003</span>
+                </div>
+                <div class="loc-name" id="loc-name">杯头 M3×10</div>
+                <div class="loc-grid" id="loc-grid"></div>
+                <div class="loc-foot">
+                    <span class="loc-beepwrap" id="loc-beepwrap"><span class="loc-wave"><i></i><i></i><i></i><i></i><i></i></span><span class="loc-beep" id="loc-beep">♪</span></span>
+                    <span class="loc-meta">&lt; 30s</span>
+                    <span class="loc-meta" id="loc-users">7 在线</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1148,6 +1230,7 @@
             stat_unit_box: '箱', stat_unit_people: '人',
             stat_boxes: '零件箱覆盖', stat_concurrent: '同时查找', stat_time: '定位时间', stat_cost: '单箱成本',
             unbox_hint: '向下滑动 · 开箱',
+            loc_locating: '定位中…', loc_locked: '已锁定', loc_beep: '蜂鸣中', loc_users: '7 在线',
             how_eyebrow: '原理', how_title: '三步找到零件',
             step1_title: '搜索', step1_desc: '手机扫码打开网页，输入零件名称或型号',
             step2_title: '定位', step2_desc: '对应零件箱自动响铃闪灯，颜色和节奏区分不同用户',
@@ -1196,6 +1279,7 @@
             stat_unit_box: ' bins', stat_unit_people: ' users',
             stat_boxes: 'Parts Bins', stat_concurrent: 'Concurrent Users', stat_time: 'Locate Time', stat_cost: 'Per Unit Cost',
             unbox_hint: 'Scroll to open',
+            loc_locating: 'Locating…', loc_locked: 'Locked', loc_beep: 'Beeping', loc_users: '7 online',
             how_eyebrow: 'How It Works', how_title: 'Three steps to any part',
             step1_title: 'Search', step1_desc: 'Scan QR code on your phone, type the part name or model number',
             step2_title: 'Locate', step2_desc: 'The target box beeps and flashes LEDs — colors and rhythms distinguish users',
@@ -1258,6 +1342,8 @@
             demoSearch();
             // applyLang rewrote the wave-split headings' textContent — re-split them into masked words
             splitWave();
+            // Live Locator: repaint its runtime text (state / box / part name) in the new language
+            if (window.refreshLocator) window.refreshLocator();
         }
 
         function toggleLang() {
@@ -1776,6 +1862,248 @@
             frame(window.scrollY);
         })();
 
+        // ========== Hero dot-matrix canvas (drift + cursor spotlight; hero-only, self-pausing) ==========
+        (function(){
+            const canvas = document.querySelector('.hero-grid');
+            const hero = document.getElementById('main');
+            if (!canvas || !hero || !canvas.getContext) return;
+            const ctx = canvas.getContext('2d');
+            const root = document.documentElement;
+            const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+            const fineMQ = matchMedia('(hover:hover) and (pointer:fine)');
+            const GAP = 40, DOT = 1.6, R = 120, R2 = R * R;
+            let w = 0, h = 0, dpr = 1, raf = null, onScreen = true, animate = false, lastDraw = 0;
+            let cx = -9999, cy = -9999, spotlight = false;
+            let dotColor = 'rgba(97,196,227,.07)', spotColor = '#61C4E3';
+
+            function readColors(){
+                const cs = getComputedStyle(root);
+                const d = cs.getPropertyValue('--grid-dot').trim();
+                const a = cs.getPropertyValue('--accent').trim();
+                if (d) dotColor = d;
+                if (a) spotColor = a;
+            }
+            function resize(){
+                dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                w = hero.clientWidth; h = hero.clientHeight;
+                canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+            function draw(now){
+                const ox = animate ? (now * 0.004) % GAP : 0;
+                const oy = animate ? (now * 0.002) % GAP : 0;
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = dotColor;
+                for (let y = -GAP + oy; y < h + GAP; y += GAP)
+                    for (let x = -GAP + ox; x < w + GAP; x += GAP)
+                        ctx.fillRect(x - DOT / 2, y - DOT / 2, DOT, DOT);
+                if (spotlight && cx > -9998){
+                    const rect = canvas.getBoundingClientRect();
+                    const mxp = cx - rect.left, myp = cy - rect.top;
+                    if (mxp >= -R && mxp <= w + R && myp >= -R && myp <= h + R){
+                        ctx.fillStyle = spotColor;
+                        const startX = Math.ceil((mxp - R - ox) / GAP) * GAP + ox;
+                        const startY = Math.ceil((myp - R - oy) / GAP) * GAP + oy;
+                        for (let y = startY; y <= myp + R; y += GAP)
+                            for (let x = startX; x <= mxp + R; x += GAP){
+                                const dx = x - mxp, dy = y - myp, d2 = dx * dx + dy * dy;
+                                if (d2 > R2) continue;
+                                const k = 1 - d2 / R2, s = DOT + k * 1.6;
+                                ctx.globalAlpha = k * 0.18;
+                                ctx.fillRect(x - s / 2, y - s / 2, s, s);
+                            }
+                        ctx.globalAlpha = 1;
+                    }
+                }
+            }
+            function loop(now){
+                if (!animate || !onScreen || document.hidden){ raf = null; return; }
+                raf = requestAnimationFrame(loop);
+                if (now - lastDraw < 33) return;   // ~30fps
+                lastDraw = now;
+                draw(now);
+            }
+            function kick(){ if (raf == null && animate && onScreen && !document.hidden) raf = requestAnimationFrame(loop); }
+            function staticFrame(){ if (raf != null){ cancelAnimationFrame(raf); raf = null; } draw(0); }
+            function setup(){
+                animate = fineMQ.matches && !reduceMQ.matches;
+                resize(); readColors();
+                if (animate) kick(); else { spotlight = false; staticFrame(); }
+            }
+            let rzTO = null;
+            window.addEventListener('resize', () => { clearTimeout(rzTO); rzTO = setTimeout(() => { resize(); if (animate) kick(); else staticFrame(); }, 150); }, { passive: true });
+            window.addEventListener('load', () => { resize(); if (!animate) staticFrame(); }, { passive: true });
+            document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+            new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen) kick(); else if (raf != null){ cancelAnimationFrame(raf); raf = null; } }, { threshold: 0 }).observe(hero);
+            hero.addEventListener('mousemove', e => { if (animate){ cx = e.clientX; cy = e.clientY; spotlight = true; } }, { passive: true });
+            hero.addEventListener('mouseleave', () => { spotlight = false; });
+            new MutationObserver(() => { readColors(); if (!animate) staticFrame(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+            if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', setup);
+            if (fineMQ.addEventListener) fineMQ.addEventListener('change', setup);
+            setup();
+        })();
+
+        // ========== Live Locator (hero mini dashboard; reuses loader .lbox bins) ==========
+        (function(){
+            const card = document.querySelector('.hero-visual.loc');
+            if (!card) return;
+            const grid = document.getElementById('loc-grid');
+            const elState = document.getElementById('loc-state');
+            const elBox = document.getElementById('loc-box');
+            const elName = document.getElementById('loc-name');
+            const elUsers = document.getElementById('loc-users');
+            const elBeepWrap = document.getElementById('loc-beepwrap');
+            const elBeep = document.getElementById('loc-beep');
+            const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+            const fineMQ = matchMedia('(hover:hover) and (pointer:fine)');
+            const LOC_SAMPLES = [
+                { zh: '杯头 M3×10', en: 'M3×10 Screw', box: 'FINDIT-003' },
+                { zh: 'Falcon 起步齿轮', en: 'Falcon Gear', box: 'FINDIT-023' },
+                { zh: '公制轴承 D5', en: 'D5 Bearing', box: 'FINDIT-021' },
+                { zh: 'LED 灯带', en: 'WS2812B LED', box: 'FINDIT-017' },
+                { zh: 'Wago 快速接头', en: 'Wago Connector', box: 'FINDIT-009' },
+                { zh: 'RoboRIO', en: 'RoboRIO', box: 'FINDIT-015' },
+                { zh: '编码器', en: 'Encoder', box: 'FINDIT-010' },
+                { zh: '公制铜套', en: 'Bronze Bushing', box: 'FINDIT-022' }
+            ];
+            const BIN_SVG = '<svg viewBox="0 0 48 44"><path class="lb-top" d="M24 6 L42 16 L24 26 L6 16 Z"/><path class="lb-left" d="M6 16 L24 26 L24 40 L6 30 Z"/><path class="lb-right" d="M24 26 L42 16 L42 30 L24 40 Z"/><circle class="lb-led" cx="33" cy="23.5" r="2.6"/></svg>';
+            const N = 12, MAX_CYCLES = 3;
+            const bins = [];
+            if (grid){ for (let i = 0; i < N; i++){ const d = document.createElement('div'); d.className = 'lbox'; d.innerHTML = BIN_SVG; grid.appendChild(d); bins.push(d); } }
+
+            let idx = 0, state = 'locating', cycles = 0, timer = null, typeTimer = null, onScreen = true;
+            const isEn = () => (typeof lang !== 'undefined' && lang === 'en');
+            const dict = () => (isEn() ? en : zh);
+            const T = k => (dict()[k] || k);
+            const sampleName = s => (isEn() ? s.en : s.zh);
+            const animate = () => fineMQ.matches && !reduceMQ.matches;
+
+            function dimAll(){ bins.forEach(b => { b.classList.remove('lit'); b.classList.add('dim'); }); }
+            function lightBin(i){ bins.forEach((b, j) => b.classList.toggle('dim', j !== i)); const b = bins[i]; if (b){ b.classList.remove('lit'); void b.offsetWidth; b.classList.add('lit'); } }
+            function setLocked(on){
+                state = on ? 'locked' : 'locating';
+                if (elState) elState.textContent = on ? T('loc_locked') : T('loc_locating');
+                if (elBeepWrap) elBeepWrap.classList.toggle('on', on);
+                if (on && elBeep) elBeep.textContent = '♪ ' + T('loc_beep');
+            }
+            function typeName(full, done){
+                if (typeTimer){ clearTimeout(typeTimer); typeTimer = null; }
+                state = 'typing'; let n = 0;
+                (function step(){
+                    if (elName) elName.textContent = full.slice(0, n);
+                    if (n < full.length){ n++; typeTimer = setTimeout(step, 38); }
+                    else { typeTimer = null; if (done) done(); }
+                })();
+            }
+            function tick(){
+                const s = LOC_SAMPLES[idx];
+                setLocked(false);
+                if (elBox) elBox.textContent = s.box;
+                if (elBeepWrap) elBeepWrap.classList.remove('on');
+                dimAll();
+                typeName(sampleName(s), () => {
+                    lightBin(Math.floor(Math.random() * N));
+                    setLocked(true);
+                    timer = setTimeout(() => {
+                        idx = (idx + 1) % LOC_SAMPLES.length;
+                        if (++cycles >= MAX_CYCLES){ timer = null; return; }   // rest on last LOCKED, no endless loop
+                        tick();
+                    }, 1700);
+                });
+            }
+            function clearTimers(){ if (timer){ clearTimeout(timer); timer = null; } if (typeTimer){ clearTimeout(typeTimer); typeTimer = null; } }
+            function start(){ clearTimers(); cycles = 0; idx = 0; if (onScreen && !document.hidden) tick(); }
+            function staticView(){
+                clearTimers(); idx = 0;
+                const s = LOC_SAMPLES[0];
+                if (elBox) elBox.textContent = s.box;
+                if (elName) elName.textContent = sampleName(s);
+                bins.forEach((b, j) => b.classList.toggle('dim', j !== 5));
+                if (bins[5]) bins[5].classList.add('lit');
+                setLocked(true);
+            }
+            function init(){ if (animate()) start(); else staticView(); }
+
+            window.refreshLocator = function(){
+                const s = LOC_SAMPLES[idx];
+                if (elBox) elBox.textContent = s.box;
+                if (elUsers) elUsers.textContent = T('loc_users');
+                if (elState) elState.textContent = state === 'locked' ? T('loc_locked') : T('loc_locating');
+                if (elBeep && state === 'locked') elBeep.textContent = '♪ ' + T('loc_beep');
+                if (elName && state !== 'typing') elName.textContent = sampleName(s);
+            };
+
+            new IntersectionObserver(es => {
+                onScreen = es[0].isIntersecting;
+                if (!animate()) return;
+                if (onScreen && !document.hidden){ if (timer == null && typeTimer == null) start(); }
+                else clearTimers();
+            }, { threshold: 0.2 }).observe(card);
+            document.addEventListener('visibilitychange', () => { if (!animate()) return; if (document.hidden) clearTimers(); else if (onScreen && timer == null && typeTimer == null) start(); });
+            card.addEventListener('click', () => { const a = document.querySelector('a[href="#demo"]'); if (a) a.click(); else { const d = document.getElementById('demo'); if (d) d.scrollIntoView({ behavior: 'smooth' }); } });
+            if (reduceMQ.addEventListener){ reduceMQ.addEventListener('change', () => { clearTimers(); init(); }); }
+            if (fineMQ.addEventListener){ fineMQ.addEventListener('change', () => { clearTimers(); init(); }); }
+            init();
+        })();
+
+        // ========== Magnetic buttons + faint companion ring (desktop fine-pointer; native cursor kept) ==========
+        (function(){
+            const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+            const fineMQ = matchMedia('(hover:hover) and (pointer:fine)');
+            if (!fineMQ.matches || reduceMQ.matches) return;   // gate: desktop fine-pointer only
+            const ring = document.querySelector('.cursor-ring');
+            const HOT = 'a, button, [role="button"], .demo-item, .entry-card, .step, .feature, .hero-visual.loc';
+            const MAG = '.btn, .nav-cta, .demo-action-btn';
+            let tx = window.innerWidth / 2, ty = window.innerHeight / 2, rx = tx, ry = ty, scale = 1, raf = null;
+            const magnets = [];
+
+            function loop(){
+                rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
+                const settled = Math.abs(tx - rx) < 0.4 && Math.abs(ty - ry) < 0.4;
+                if (settled){ rx = tx; ry = ty; }
+                if (ring) ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0) scale(' + scale + ')';
+                raf = settled ? null : requestAnimationFrame(loop);
+            }
+            function kick(){ if (raf == null) raf = requestAnimationFrame(loop); }
+            function onMove(e){ tx = e.clientX; ty = e.clientY; kick(); }
+            function onOver(e){ if (e.target.closest && e.target.closest(HOT)){ if (ring) ring.classList.add('hot'); scale = 1.4; kick(); } }
+            function onOut(e){ if (e.target.closest && e.target.closest(HOT)){ if (ring) ring.classList.remove('hot'); scale = 1; kick(); } }
+            window.addEventListener('mousemove', onMove, { passive: true });
+            document.addEventListener('mouseover', onOver, { passive: true });
+            document.addEventListener('mouseout', onOut, { passive: true });
+
+            document.querySelectorAll(MAG).forEach(el => {
+                let rect = null;
+                const enter = () => { rect = el.getBoundingClientRect(); };
+                const move = e => {
+                    if (!rect) rect = el.getBoundingClientRect();
+                    const mx = Math.max(-6, Math.min(6, (e.clientX - (rect.left + rect.width / 2)) * 0.3));
+                    const my = Math.max(-6, Math.min(6, (e.clientY - (rect.top + rect.height / 2)) * 0.3));
+                    el.style.setProperty('--mx', mx.toFixed(1) + 'px');
+                    el.style.setProperty('--my', my.toFixed(1) + 'px');
+                    el.style.willChange = 'transform';
+                };
+                const leave = () => { rect = null; el.style.setProperty('--mx', '0px'); el.style.setProperty('--my', '0px'); el.style.willChange = ''; };
+                el.addEventListener('mouseenter', enter);
+                el.addEventListener('mousemove', move, { passive: true });
+                el.addEventListener('mouseleave', leave);
+                magnets.push({ el, enter, move, leave });
+            });
+
+            function bow(){   // permanently bow out, leaving native cursor + static buttons
+                if (raf != null){ cancelAnimationFrame(raf); raf = null; }
+                window.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseover', onOver);
+                document.removeEventListener('mouseout', onOut);
+                magnets.forEach(m => { m.el.removeEventListener('mouseenter', m.enter); m.el.removeEventListener('mousemove', m.move); m.el.removeEventListener('mouseleave', m.leave); m.leave(); });
+                if (ring) ring.remove();
+            }
+            window.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') bow(); }, { passive: true });
+            if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', e => { if (e.matches) bow(); });
+
+            kick();
+        })();
+
         // ========== End ==========
     </script>
     <!-- Feature Modal -->
@@ -1789,6 +2117,7 @@
         </div>
     </div>
 
+    <div class="cursor-ring" aria-hidden="true"></div>
     <script src="features.js"></script>
 </body>
 </html>
