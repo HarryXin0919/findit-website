@@ -58,6 +58,10 @@
             --accent-grad: linear-gradient(115deg, #61C4E3 0%, #61C4E3 38%, #3E96E6 100%);
             --glow: 0 6px 22px rgba(97,196,227,.30), 0 10px 40px rgba(62,150,230,.16);
             --grid-dot: rgba(97,196,227,.07);
+            --accent-hover: #4db8d9;          /* darker cyan — button hover (was bare #4db8d9) */
+            --state-ok: #2FB7A0;              /* success: teal-green, harmonized to cyan (not iOS green) */
+            --state-ok-hover: #259a86;
+            --state-ok-dim: rgba(47,183,160,0.15);
             --font-display: 'Sora', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
             --font-body: 'IBM Plex Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
             --font-mono: 'IBM Plex Mono', 'Noto Sans SC', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -85,7 +89,7 @@
             --input-bg: rgba(255, 255, 255, 0.04);
             --input-color: #fff;
             --demo-item-hover-border: rgba(255, 255, 255, 0.18);
-            --demo-active-bg: rgba(255, 59, 48, 0.06);
+            --demo-active-bg: rgba(97, 196, 227, 0.08);
             --timeline-line: rgba(255, 255, 255, 0.15);
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
             --shadow-md: 0 10px 34px rgba(0, 0, 0, 0.5);
@@ -135,7 +139,7 @@
             --input-bg: rgba(0, 0, 0, 0.03);
             --input-color: #1d1d1f;
             --demo-item-hover-border: rgba(0, 0, 0, 0.12);
-            --demo-active-bg: rgba(255, 59, 48, 0.06);
+            --demo-active-bg: rgba(97, 196, 227, 0.08);
             --timeline-line: rgba(0, 0, 0, 0.1);
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
             --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -327,6 +331,9 @@
         }
         .hero h1 .it { color: var(--accent-hero); }
         .hero h1 .dim { color: var(--text); }
+        /* CJK 不吃负字距：中文标题字距归位，西文(en)保留紧排 */
+        html[lang="zh"] .hero h1 { letter-spacing: -0.006em; }
+        html[lang="zh"] .section-title { letter-spacing: -0.008em; }
         .hero-sub {
             font-size: clamp(17px, 2.5vw, 22px); color: var(--text-dim); max-width: 480px;
             line-height: 1.5; margin-bottom: 48px; position: relative; z-index: 1;
@@ -344,9 +351,12 @@
             font-weight: 500; text-decoration: none; transition: all 0.3s; border: none; cursor: pointer;
         }
         .btn-fill { background: var(--accent); color: var(--accent-on); }
-        .btn-fill:hover { background: #4db8d9; --btn-s: 1.02; box-shadow: var(--glow); }
+        .btn-fill:hover { background: var(--accent-hover); --btn-s: 1.02; box-shadow: var(--glow); }
         .btn-ghost { background: transparent; color: var(--accent-ink); }
         .btn-ghost:hover { background: var(--accent-dim); }
+        .hero-srclink { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 500; color: var(--text-dim); text-decoration: none; align-self: center; transition: color 0.2s; }
+        .hero-srclink:hover { color: var(--text); }
+        .hero-srclink svg { width: 16px; height: 16px; }
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes panelIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -384,7 +394,7 @@
         .loc-status { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); }
         .loc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: locDot 1.6s ease-in-out infinite; }
         @keyframes locDot { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
-        .loc-box { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+        .loc-box { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--accent-ink); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'zero' 1; }
         .loc-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 14px; min-height: 23px; }
         .loc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 6px; margin-bottom: 14px; }
         .loc-foot { display: flex; align-items: center; gap: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dimmer); letter-spacing: .04em; }
@@ -424,7 +434,7 @@
         .curtain-meta { position: absolute; bottom: 11vh; left: 0; right: 0; display: flex; flex-direction: column;
             align-items: center; gap: 7px; opacity: 0; animation: curtainIn 0.7s ease forwards 0.4s; }
         .curtain-num { display: flex; align-items: baseline; font-family: var(--font-display); color: var(--text); }
-        .curtain-pct { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+        .curtain-pct { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'zero' 1; }
         .curtain-pct-sign { font-size: 17px; font-weight: 600; color: var(--text-dim); margin-left: 2px; }
         .curtain-tag { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); transition: color 0.3s; }
         .curtain-inner { display: flex; flex-direction: column; align-items: center; }
@@ -520,7 +530,7 @@
 
         /* How */
         .how { padding: 150px 24px; }
-        .section-eyebrow { font-size: 16px; font-weight: 600; color: var(--accent-ink); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .section-eyebrow { font-size: 13px; font-weight: 600; color: var(--accent-ink); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
         .section-eyebrow::before { content: '// '; font-family: var(--font-mono); color: var(--text-dimmer); letter-spacing: .2em; }
         .section-bg .section-title { color: var(--section-title); text-shadow: var(--text-shadow); }
         .section-bg .section-eyebrow { text-shadow: var(--text-shadow); }
@@ -651,7 +661,7 @@
             border: 1px solid var(--surface-border); border-radius: 12px; cursor: pointer; transition: all 0.2s;
         }
         .demo-item:hover { border-color: var(--demo-item-hover-border); }
-        .demo-item.active { border-color: #ff3b30; background: var(--demo-active-bg); }
+        .demo-item.active { border-color: var(--accent); background: var(--demo-active-bg); }
         .demo-item-name { font-size: 15px; font-weight: 500; }
         .demo-item-meta { font-size: 12px; color: var(--text-dimmer); margin-top: 2px; }
         .demo-btn {
@@ -659,42 +669,31 @@
             background: var(--accent); color: var(--accent-on); font-size: 13px; font-weight: 600; cursor: pointer;
             transition: all 0.2s; white-space: nowrap;
         }
-        .demo-btn:hover { background: #4db8d9; }
-        .demo-btn.active { background: #ff3b30; color: #fff; }
+        .demo-btn:hover { background: var(--accent-hover); }
+        .demo-btn.active { background: var(--accent); color: var(--accent-on); }
 
-        /* Locate animation */
+        /* Locate animation — isometric bin, unified with the loader / Live Locator bin motif */
         .locate-panel { text-align: center; }
         .locate-box-visual {
-            width: 200px; height: 160px; margin: 32px auto;
-            background: var(--card-bg); border: 2px solid var(--surface-border); border-radius: 16px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; transition: all 0.3s;
+            margin: 28px auto 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
         }
-        .locate-box-visual.locating {
-            animation: boxFlash 0.6s ease-in-out infinite;
+        .locate-bin { width: 156px; height: auto; overflow: visible; transition: filter 0.3s; }
+        .locate-bin .lb-top, .locate-bin .lb-left, .locate-bin .lb-right {
+            fill: var(--accent); fill-opacity: 0.05; stroke: var(--accent-ink); stroke-width: 2; stroke-linejoin: round;
+            transition: fill-opacity 0.3s, stroke 0.3s;
         }
-        .locate-box-visual.locating .locate-led {
-            animation: ledPulse 0.3s ease-in-out infinite;
-        }
-        .locate-box-visual .locate-led {
-            width: 16px; height: 16px; border-radius: 50%;
-            background: var(--text-dimmer); transition: all 0.3s;
-        }
-        .locate-box-visual.locating .locate-led { background: #ff3b30; box-shadow: 0 0 16px #ff3b30; }
+        .locate-bin .lb-led { fill: var(--text-dimmer); transition: fill 0.3s; }
+        .locate-box-visual.locating .locate-bin .lb-top { fill-opacity: 0.22; }
+        .locate-box-visual.locating .locate-bin .lb-top,
+        .locate-box-visual.locating .locate-bin .lb-left,
+        .locate-box-visual.locating .locate-bin .lb-right { stroke: var(--accent); }
+        .locate-box-visual.locating .locate-bin .lb-led { fill: var(--accent); }
+        .locate-box-visual.locating .locate-bin { filter: drop-shadow(0 0 16px rgba(97,196,227,0.6)); animation: binPulse 0.85s ease-in-out infinite; }
+        @keyframes binPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.74; } }
         .locate-box-visual .locate-box-id {
-            font-size: 13px; font-weight: 600; color: var(--text-dim); margin-top: 12px;
+            font-family: var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--accent-ink);
         }
-        .locate-box-visual .locate-buzzer {
-            font-size: 11px; color: var(--text-dimmer); margin-top: 4px;
-        }
-        @keyframes boxFlash {
-            0%, 100% { border-color: var(--surface-border); box-shadow: none; }
-            50% { border-color: #ff3b30; box-shadow: 0 0 30px rgba(255,59,48,0.3); }
-        }
-        @keyframes ledPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.8; }
-        }
+        .locate-box-visual .locate-buzzer { font-size: 11px; color: var(--text-dimmer); }
         .locate-info { font-size: 15px; color: var(--text-dim); margin-bottom: 8px; }
         .locate-part-name { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
         .locate-sound-waves {
@@ -719,12 +718,12 @@
         /* Confirm panel */
         .confirm-success {
             width: 80px; height: 80px; border-radius: 50%;
-            background: rgba(48,209,88,0.15); border: 2px solid #30d158;
+            background: var(--state-ok-dim); border: 2px solid var(--state-ok);
             display: flex; align-items: center; justify-content: center;
             margin: 32px auto;
             animation: successPop 0.5s cubic-bezier(0.16,1,0.3,1);
         }
-        .confirm-success svg { width: 36px; height: 36px; stroke: #30d158; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .confirm-success svg { width: 36px; height: 36px; stroke: var(--state-ok); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
         @keyframes successPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .confirm-stats {
@@ -734,7 +733,7 @@
             background: var(--surface); border-radius: 12px; padding: 16px; text-align: center;
         }
         .confirm-stat-value { font-size: 24px; font-weight: 700; color: var(--accent-ink); }
-        #confirm-box { font-family: var(--font-mono); font-weight: 600; letter-spacing: .04em; }
+        #confirm-box { font-family: var(--font-mono); font-weight: 600; letter-spacing: .04em; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'zero' 1; }
         .confirm-stat-label { font-size: 12px; color: var(--text-dimmer); margin-top: 4px; }
 
         /* Action buttons */
@@ -744,11 +743,11 @@
             font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
         .demo-action-btn.primary { background: var(--accent); color: var(--accent-on); }
-        .demo-action-btn.primary:hover { background: #4db8d9; --btn-s: 1.02; box-shadow: var(--glow); }
+        .demo-action-btn.primary:hover { background: var(--accent-hover); --btn-s: 1.02; box-shadow: var(--glow); }
         .demo-action-btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--surface-border); }
         .demo-action-btn.secondary:hover { border-color: var(--surface-hover); }
-        .demo-action-btn.success { background: #30d158; color: #fff; }
-        .demo-action-btn.success:hover { background: #28b84d; }
+        .demo-action-btn.success { background: var(--state-ok); color: #fff; }
+        .demo-action-btn.success:hover { background: var(--state-ok-hover); }
         .demo-actions { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
 
         @media (max-width: 768px) {
@@ -893,7 +892,7 @@
         <div class="hero-actions">
             <a href="#demo" class="btn btn-fill" data-i18n="hero_cta1">试试看 →</a>
             <a href="#how" class="btn btn-ghost" data-i18n="hero_cta2">了解原理</a>
-            <a href="https://github.com/HarryXin0919/FindItem" target="_blank" rel="noopener" class="btn btn-ghost"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span data-i18n="hero_cta3">查看源码</span></a>
+            <a href="https://github.com/HarryXin0919/FindItem" target="_blank" rel="noopener" class="hero-srclink"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span data-i18n="hero_cta3">查看源码</span></a>
         </div>
         <div class="hero-visual loc" aria-hidden="true">
             <div class="loc-card">
@@ -1125,7 +1124,12 @@
                         <div class="locate-info" data-i18n="locate_info">正在定位零件...</div>
                         <div class="locate-part-name" id="locate-part-name"></div>
                         <div class="locate-box-visual" id="locate-box-visual">
-                            <div class="locate-led"></div>
+                            <svg class="locate-bin" viewBox="0 0 120 112" aria-hidden="true">
+                                <path class="lb-top"   d="M60 12 L108 40 L60 68 L12 40 Z"/>
+                                <path class="lb-left"  d="M12 40 L60 68 L60 100 L12 72 Z"/>
+                                <path class="lb-right" d="M60 68 L108 40 L108 72 L60 100 Z"/>
+                                <circle class="lb-led" cx="84" cy="56" r="6"/>
+                            </svg>
                             <div class="locate-box-id" id="locate-box-id"></div>
                             <div class="locate-buzzer" style="display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg><span data-i18n="locate_buzzer">蜂鸣器响铃中</span></div>
                         </div>

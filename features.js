@@ -6,7 +6,7 @@ const featureDetails = {
             title: '模糊搜索',
             subtitle: '输入名称、型号或类别，实时匹配，不用翻箱倒柜',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">工作原理</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">工作原理</h3>
                 <p style="margin-bottom:24px">系统采用模糊匹配算法，支持按零件名称、型号、类别进行搜索。不需要记住精确的零件编号，输入部分关键词即可实时匹配。</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
@@ -26,7 +26,7 @@ const featureDetails = {
                         <div style="font-size:13px;color:var(--text-dim)">输入即时显示结果，无需等待</div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">技术实现</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">技术实现</h3>
                 <p>ESP32-C3 通过 WiFi 连接服务器，接收搜索请求后扫描本地数据库，使用 Levenshtein 距离算法进行模糊匹配，50ms 内返回结果</p>
             `
         },
@@ -35,7 +35,7 @@ const featureDetails = {
             title: '多人并发',
             subtitle: '最多 7 人同时查找，每人分配不同颜色的 LED 和蜂鸣器节奏',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">并发机制</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">并发机制</h3>
                 <p style="margin-bottom:24px">系统支持最多 7 名用户同时查找不同零件。每个用户的请求通过独立的 WebSocket 连接处理，互不干扰</p>
                 <div style="margin-bottom:24px">
                     <div style="font-weight:600;margin-bottom:12px">颜色编码方案</div>
@@ -63,7 +63,7 @@ const featureDetails = {
                         </div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">蜂鸣器节奏区分</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">蜂鸣器节奏区分</h3>
                 <p>每位用户的蜂鸣器频率和节奏模式不同（快速/中速/慢速/间歇），即使在嘈杂的比赛准备环境中也能辨别出自己的目标箱子</p>
             `
         },
@@ -72,7 +72,7 @@ const featureDetails = {
             title: '飞书登录',
             subtitle: '可选的 OAuth 身份验证，自托管可控',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">安全保障</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">安全保障</h3>
                 <p style="margin-bottom:24px">系统可选接入飞书 OAuth 2.0 进行身份验证，限定允许使用的用户范围（自托管时由你自行配置）</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
@@ -95,7 +95,7 @@ const featureDetails = {
             title: '电量监控',
             subtitle: '电池电压实时监测，低电量自动飞书通知管理员',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">智能监控</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">智能监控</h3>
                 <p style="margin-bottom:24px">每个 FindIt 设备内置电压检测电路，通过 ADC 实时监测电池状态</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
@@ -107,7 +107,7 @@ const featureDetails = {
                         <div style="font-size:13px;color:var(--text-dim);margin-top:4px">低电量警报阈值</div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">通知机制</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">通知机制</h3>
                 <p>当电池电压低于 3.0V 时，系统自动通过飞书机器人向管理员发送低电量提醒，包含设备编号和当前电压值。管理员可以及时更换电池，避免比赛中断</p>
             `
         },
@@ -116,7 +116,7 @@ const featureDetails = {
             title: '零件管理',
             subtitle: '管理员可增删改查零件信息，按名称、型号、类别搜索',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">管理后台</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">管理后台</h3>
                 <p style="margin-bottom:24px">管理员通过 Web 后台管理所有零件信息，支持完整的 CRUD 操作</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
@@ -136,7 +136,7 @@ const featureDetails = {
                         <div><div style="font-weight:600">箱子管理</div><div style="font-size:13px;color:var(--text-dim)">每个箱子最多 3 种零件，清晰明了，避免混乱</div></div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">数据结构</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">数据结构</h3>
                 <div style="background:var(--surface);border-radius:12px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8">
                     <div style="color:var(--accent-ink)">FINDIT-001</div>
                     <div>├── M3×10 螺丝 <span style="color:var(--text-dim)">(螺丝)</span></div>
@@ -156,7 +156,7 @@ const featureDetails = {
             title: 'Smart Search',
             subtitle: 'Search by name, model, or category with instant fuzzy matching',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">How It Works</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">How It Works</h3>
                 <p style="margin-bottom:24px">The system uses fuzzy matching to find parts by name, model number, or category. No need to remember exact part numbers — just type a partial keyword and get instant results</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px">
@@ -176,7 +176,7 @@ const featureDetails = {
                         <div style="font-size:13px;color:var(--text-dim)">Results appear as you type, zero wait time</div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Tech Details</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Tech Details</h3>
                 <p>ESP32-C3 connects to the server via WiFi, scans the local database using Levenshtein distance fuzzy matching, returns results within 50ms</p>
             `
         },
@@ -185,7 +185,7 @@ const featureDetails = {
             title: 'Multi-user',
             subtitle: 'Up to 7 people searching simultaneously with unique LED colors and beep patterns',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Concurrency</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Concurrency</h3>
                 <p style="margin-bottom:24px">The system supports up to 7 team members searching for different parts at the same time. Each user's request is handled through an independent WebSocket connection</p>
                 <div style="margin-bottom:24px">
                     <div style="font-weight:600;margin-bottom:12px">Color Coding</div>
@@ -213,7 +213,7 @@ const featureDetails = {
                         </div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Audio Distinction</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Audio Distinction</h3>
                 <p>Each user gets a unique buzzer frequency and rhythm pattern (fast/medium/slow/intermittent), so you can identify your target box even in a noisy competition environment</p>
             `
         },
@@ -222,7 +222,7 @@ const featureDetails = {
             title: 'Feishu Login',
             subtitle: 'Optional OAuth authentication — self-hostable and under your control',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Security</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Security</h3>
                 <p style="margin-bottom:24px">The system can optionally authenticate via Feishu OAuth 2.0, restricting access to the user group you configure (you set this up when self-hosting)</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px">
@@ -245,7 +245,7 @@ const featureDetails = {
             title: 'Battery Monitor',
             subtitle: 'Real-time voltage monitoring with automatic low-battery alerts via Feishu',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Smart Monitoring</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Smart Monitoring</h3>
                 <p style="margin-bottom:24px">Each FindIt unit has a built-in voltage sensing circuit that monitors battery status in real-time via ADC</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
                     <div style="background:var(--surface);border-radius:12px;padding:20px;text-align:center">
@@ -257,7 +257,7 @@ const featureDetails = {
                         <div style="font-size:13px;color:var(--text-dim);margin-top:4px">Low Battery Threshold</div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Alert System</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Alert System</h3>
                 <p>When battery drops below 3.0V, the system automatically sends a low-battery alert to admins via Feishu bot, including device ID and current voltage. Admins can swap batteries before competition is affected</p>
             `
         },
@@ -266,7 +266,7 @@ const featureDetails = {
             title: 'Parts Management',
             subtitle: 'Admins can add, edit, and search parts by name, model, or category',
             body: `
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Admin Dashboard</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Admin Dashboard</h3>
                 <p style="margin-bottom:24px">Admins manage all parts through a web dashboard with full CRUD operations</p>
                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px">
                     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:12px;padding:16px">
@@ -286,7 +286,7 @@ const featureDetails = {
                         <div><div style="font-weight:600">Box Management</div><div style="font-size:13px;color:var(--text-dim)">Max 3 part types per box — clean and organized</div></div>
                     </div>
                 </div>
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text)">Data Structure</h3>
+                <h3 style="font-size:18px;font-weight:600;margin-bottom:12px;color:var(--text)">Data Structure</h3>
                 <div style="background:var(--surface);border-radius:12px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8">
                     <div style="color:var(--accent-ink)">FINDIT-001</div>
                     <div>├── M3×10 Screw <span style="color:var(--text-dim)">(Screw)</span></div>
