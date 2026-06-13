@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>寻物 FindItem — Smart Parts Locator</title>
+    <title>寻物 FindItem — 智能零件定位系统</title>
     <meta name="description" content="寻物 FindItem — 开源零件定位系统：手机扫码搜索，对应零件箱响铃闪灯，30 秒内定位。基于 ESP32 + FastAPI + MQTT，支持多人并发、深浅双主题、中英双语。">
     <meta name="author" content="FindItem">
     <meta name="theme-color" content="#0A0C0F" media="(prefers-color-scheme: dark)">
@@ -1672,6 +1672,13 @@
 
         let activePart = null;
 
+        // Escape text before injecting via innerHTML (part names can contain ' " < > &).
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+            ));
+        }
+
         function demoSearch() {
             const q = document.getElementById('demo-input').value.trim().toLowerCase();
             const div = document.getElementById('demo-results');
@@ -1690,15 +1697,23 @@
             div.innerHTML = m.map(p => {
                 const displayName = isEn ? (p.name_en || p.name) : p.name;
                 const displayCat = isEn ? (p.cat_en || p.cat) : p.cat;
+                const idx = PARTS.indexOf(p);
                 return `
-                <div class="demo-item${activePart===p.name?' active':''}" role="button" tabindex="0" onclick="demoLocate('${p.name}')">
+                <div class="demo-item${activePart===p.name?' active':''}" role="button" tabindex="0" data-idx="${idx}">
                     <div>
-                        <div class="demo-item-name">${displayName}</div>
-                        <div class="demo-item-meta">${displayCat} · ${p.box}</div>
+                        <div class="demo-item-name">${escapeHtml(displayName)}</div>
+                        <div class="demo-item-meta">${escapeHtml(displayCat)} · ${escapeHtml(p.box)}</div>
                     </div>
                     <button class="demo-btn${activePart===p.name?' active':''}">${activePart===p.name?dict.demo_found:dict.demo_locate}</button>
                 </div>`;
             }).join('');
+            // Bind clicks here instead of inline onclick so part names with ' or " can't break the handler.
+            div.querySelectorAll('.demo-item[data-idx]').forEach(row => {
+                row.addEventListener('click', () => {
+                    const part = PARTS[+row.getAttribute('data-idx')];
+                    if (part) demoLocate(part.name);
+                });
+            });
         }
 
         function demoLocate(name) {
@@ -1779,7 +1794,9 @@
                 });
             });
         }
-        splitWave();
+        // Run the i18n pass once on load so title / lang / wave-split headings are correct on first paint
+        // (not only after a user language toggle). applyLang() internally calls splitWave() + demoSearch().
+        applyLang();
 
         // ========== Loader: search the bins, light a random one at 100% ==========
         (function(){
